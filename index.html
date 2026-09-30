@@ -214,7 +214,7 @@
         const S = JSON.parse(localStorage.getItem('rp_settings_or') || '{}');
         const cfg = {
             base: S.base || 'https://openrouter.ai/api/v1',
-            model: S.model || 'openrouter/free',
+            model: S.model || 'inclusionai/ling-3.0-flash-sante:free',
             key: S.key || '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',
             temp: S.temp ?? 0.9
         };
@@ -222,7 +222,7 @@
 
         const modelSelect = document.getElementById('model-select');
         function buildModels() {
-            const list = ['openrouter/free'];
+            const list = ['inclusionai/ling-3.0-flash-sante:free', 'openrouter/free'];
             if (!list.includes(cfg.model)) list.push(cfg.model);
             modelSelect.innerHTML = list.map(m => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join('')
                 + '<option value="__custom__">+ ใส่ชื่อโมเดลเอง…</option>';
@@ -248,13 +248,76 @@
             saveCfg(); closeSettings();
         }
 
-        /* ---------- ประวัติแชท ---------- */
-        let history = JSON.parse(localStorage.getItem('rp_chat_hist') || '[]');
-        const saveHist = () => localStorage.setItem('rp_chat_hist', JSON.stringify(history));
+        /* ---------- ประวัติแชท (Cloud Sync) ---------- */
+        let history = []; 
+        let sessionId = localStorage.getItem('kv_session_id');
+        if (!sessionId) {
+            sessionId = 'user_' + Math.random().toString(36).substring(2, 10);
+            localStorage.setItem('kv_session_id', sessionId);
+        }
+        document.getElementById('session-badge').innerText = 'ID: ' + sessionId;
+
         const chatWindow = document.getElementById('chat-window');
         const roleField = document.getElementById('system-role');
-        roleField.value = localStorage.getItem('rp_role_text') || '';
+        roleField.value = localStorage.getItem('rp_role_text') || presetRoles.custom;
         roleField.addEventListener('input', () => localStorage.setItem('rp_role_text', roleField.value));
+
+        // 1. ฟังก์ชันส่งประวัติแชทขึ้นไปเซฟบน Cloud ทันทีที่มีข้อความใหม่
+        const saveHist = async () => {
+            try {
+                await fetch('/api/history', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId, history })
+                });
+            } catch (e) {
+                console.error("เซฟคลาวด์ขัดข้อง", e);
+            }
+        };
+
+        const fmt = t => escapeHtml(t).replace(/\n/g, '<br>');
+        function bubble(isUser, html, extraStyle = '') {
+            const row = document.createElement('div');
+            row.className = 'msg-row ' + (isUser ? 'user-row' : 'ai-row');
+            row.innerHTML = `<div class="msg-bubble" style="${extraStyle}">${html}</div>`;
+            chatWindow.appendChild(row);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            return row;
+        }
+
+        // 2. โหลดประวัติจาก Cloud ตอนเปิดหน้าเว็บ
+        async function loadCloudHistory() {
+            chatWindow.innerHTML = '<div class="msg-row ai-row"><div class="msg-bubble" style="color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> กำลังซิงค์ข้อมูลจาก Cloud...</div></div>';
+            try {
+                const res = await fetch(`/api/history?sessionId=${sessionId}`);
+                const data = await res.json();
+                history = data.history || [];
+                
+                chatWindow.innerHTML = '';
+                history.forEach(m => bubble(m.role === 'user', fmt(m.content)));
+            } catch (e) {
+                chatWindow.innerHTML = '<div class="msg-row ai-row"><div class="msg-bubble" style="color: #ef4444;">เชื่อมต่อ Cloud ไม่สำเร็จ</div></div>';
+            }
+        }
+
+        async function selectRole(roleKey, element) {
+            document.querySelectorAll('.role-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            roleField.value = presetRoles[roleKey];
+            localStorage.setItem('rp_role_text', roleField.value);
+            await clearChat(true);
+        }
+
+        async function clearChat(skipConfirm = false) {
+            if (!skipConfirm && !confirm('คุณต้องการลบประวัติการแชทนี้และเริ่มหัวข้อใหม่ใช่หรือไม่?')) return;
+            history = []; 
+            chatWindow.innerHTML = '';
+            
+            // 3. สั่งลบข้อมูลออกจาก Cloud
+            try {
+                await fetch(`/api/history?sessionId=${sessionId}`, { method: 'DELETE' });
+            } catch (e) {}
+        }
 
         let sessionId = localStorage.getItem('kv_session_id');
         if (!sessionId) {
