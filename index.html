@@ -1,243 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Puter Chat</title>
+<title>Roleplay Chat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600&family=Noto+Serif+Thai:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f2f4f9;--panel:#fff;--ink:#1a2233;--mute:#667089;--line:#dde2ee;--acc:#2b45e8;--acc-ink:#fff;--user:#e4e9fd;--code:#eef1f8}
-@media(prefers-color-scheme:dark){:root{--bg:#0f1420;--panel:#171e2e;--ink:#e7ebf5;--mute:#8d97b0;--line:#283149;--acc:#7b8dff;--acc-ink:#0f1420;--user:#222c4a;--code:#0f1420}}
+:root{--bg:#0f1420;--panel:#171e2e;--line:#2a344b;--ink:#dfe6f3;--dim:#8b97b0;--ai:#5fb3a1;--me:#d98aa5;--r:10px}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{font:15px/1.55 "Instrument Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex}
-button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
-:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-aside{width:260px;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;flex-shrink:0}
-aside h1{font:500 22px "Newsreader",Georgia,serif;margin:18px 16px 12px}
-.new{margin:0 12px 10px;padding:9px;border-radius:8px;border:0;background:var(--acc);color:var(--acc-ink);font-weight:600}
-#list{flex:1;overflow-y:auto;padding:0 8px}
-.chat{display:flex;align-items:center;gap:4px;border-radius:8px;padding:0 4px 0 10px}
-.chat:hover,.chat.on{background:var(--bg)}
-.chat button.t{flex:1;text-align:left;background:none;border:0;padding:8px 0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.chat button.x{background:none;border:0;color:var(--mute);padding:4px 8px;border-radius:6px}
-.chat button.x:hover{color:var(--ink)}
-aside footer{padding:12px 16px;border-top:1px solid var(--line);font-size:13px;color:var(--mute)}
-aside footer a{color:var(--mute)}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 "Noto Sans Thai",system-ui,sans-serif;display:flex}
+aside{width:300px;flex:none;background:var(--panel);border-right:1px solid var(--line);padding:16px;overflow:auto;display:flex;flex-direction:column;gap:10px}
 main{flex:1;display:flex;flex-direction:column;min-width:0}
-header{display:flex;gap:10px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
-header label{color:var(--mute);font-size:13px}
-#model{flex:1;max-width:340px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
-#menu{display:none;background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px}
-#msgs{flex:1;overflow-y:auto;padding:20px 16px}
-.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-.m{max-width:100%}
-.m.user{align-self:flex-end;background:var(--user);padding:9px 14px;border-radius:14px 14px 4px 14px;white-space:pre-wrap;max-width:85%}
-.m.ai{padding:0 2px}
-.m.err{color:#c62d4c}
-.md>:first-child{margin-top:0}.md>:last-child{margin-bottom:0}
-.md pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto;font-size:13px}
-.md code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
-.md pre code{background:none;padding:0}
-.md table{border-collapse:collapse;display:block;overflow-x:auto}
-.md td,.md th{border:1px solid var(--line);padding:5px 9px}
-.md a{color:var(--acc)}
-.tools{margin-top:4px}
-.tools button{background:none;border:0;color:var(--mute);font-size:13px;padding:2px 6px 2px 0}
-.tools button:hover{color:var(--ink)}
-.empty{margin:14vh auto 0;text-align:center;color:var(--mute);max-width:420px}
-.empty h2{font:500 28px "Newsreader",Georgia,serif;color:var(--ink);margin:0 0 6px}
-form{padding:12px 16px 8px;background:var(--bg)}
-.box{max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:flex-end;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px}
-textarea{flex:1;border:0;background:none;resize:none;max-height:180px;padding:6px 8px;outline:none}
-#send{border:0;border-radius:9px;background:var(--acc);color:var(--acc-ink);padding:8px 16px;font-weight:600}
-.note{max-width:760px;margin:6px auto 0;text-align:center;font-size:12px;color:var(--mute)}
-.caret::after{content:"";display:inline-block;width:7px;height:1em;background:var(--acc);margin-left:2px;vertical-align:-2px;animation:b 1s steps(2) infinite}
-@keyframes b{50%{opacity:0}}
-@media(prefers-reduced-motion:reduce){.caret::after{animation:none}}
-@media(max-width:760px){
- aside{position:fixed;inset:0 auto 0 0;z-index:5;transform:translateX(-100%);transition:transform .2s}
- aside.open{transform:none;box-shadow:0 0 40px #0006}
- #menu{display:block}
-}
+h1{font:600 20px "Noto Serif Thai",serif;margin:0 0 4px}
+label{font-size:13px;color:var(--dim);display:block;margin-top:4px}
+input,textarea,select,button{font:inherit;color:inherit;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px;width:100%}
+textarea{resize:vertical}
+button{cursor:pointer;width:auto;background:var(--panel)}
+button:hover{border-color:var(--ai)}
+button.primary{background:var(--ai);color:#0b1a17;border-color:var(--ai);font-weight:600}
+:focus-visible{outline:2px solid var(--ai);outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+header{padding:12px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
+header b{font:600 18px "Noto Serif Thai",serif}
+#log{flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.m{max-width:min(720px,88%);padding:10px 14px;border-radius:var(--r);white-space:pre-wrap;word-break:break-word}
+.m.ai{align-self:flex-start;background:var(--panel);border-left:3px solid var(--ai);font-family:"Noto Serif Thai",serif;line-height:1.8}
+.m.me{align-self:flex-end;background:#2a1f2b;border-right:3px solid var(--me)}
+.m em{color:var(--dim);font-style:italic}
+.m .who{display:block;font-size:12px;color:var(--ai);margin-bottom:2px;font-family:"Noto Sans Thai",sans-serif}
+.err{align-self:center;color:#ff9b9b;font-size:14px;max-width:90%}
+form{display:flex;gap:8px;padding:12px 20px;border-top:1px solid var(--line)}
+form textarea{resize:none;height:52px}
+.empty{margin:auto;color:var(--dim);text-align:center;max-width:380px}
+@media(max-width:760px){body{flex-direction:column}aside{width:100%;max-height:44vh;border-right:0;border-bottom:1px solid var(--line)}}
 </style>
 </head>
 <body>
-<aside id="side">
-  <h1>Puter Chat</h1>
-  <button class="new" id="new">New chat</button>
-  <div id="list" aria-label="Conversations"></div>
-  <footer>Powered by <a href="https://developer.puter.com" target="_blank" rel="noopener">Puter</a></footer>
+<aside>
+  <h1>ตั้งค่าเรื่อง</h1>
+  <label for="preset">ตัวละครสำเร็จรูป</label>
+  <select id="preset"></select>
+  <label for="name">ชื่อตัวละคร</label>
+  <input id="name">
+  <label for="persona">บุคลิก / ฉาก / กติกา (system prompt)</label>
+  <textarea id="persona" rows="8"></textarea>
+  <label for="greet">ประโยคเปิดฉาก</label>
+  <textarea id="greet" rows="3"></textarea>
+  <div class="row"><button class="primary" id="start">เริ่มฉากใหม่</button></div>
+  <details>
+    <summary style="color:var(--dim);cursor:pointer;margin-top:8px">การเชื่อมต่อ API</summary>
+    <label for="base">Base URL</label><input id="base">
+    <label for="model">Model</label><input id="model">
+    <label for="key">API key</label><input id="key" type="password" autocomplete="off">
+    <label for="temp">Temperature</label><input id="temp" type="number" step="0.1" min="0" max="2">
+  </details>
 </aside>
 <main>
-  <header>
-    <button id="menu" aria-label="Open conversations">Chats</button>
-    <label for="model">Model</label>
-    <input id="model" list="models" value="gpt-5-nano" spellcheck="false" autocomplete="off">
-    <datalist id="models"></datalist>
-  </header>
-  <div id="msgs"><div class="wrap" id="wrap"></div></div>
-  <form id="form">
-    <div class="box">
-      <textarea id="input" rows="1" placeholder="Message the model" aria-label="Message"></textarea>
-      <button id="send" type="submit">Send</button>
-    </div>
-    <div class="note">Enter to send, Shift+Enter for a new line. First message asks you to sign in to Puter.</div>
+  <header><b id="title"></b><div class="row"><button id="regen">สร้างคำตอบใหม่</button><button id="undo">ลบข้อความล่าสุด</button></div></header>
+  <div id="log"></div>
+  <form id="f">
+    <textarea id="input" placeholder="พิมพ์บทของคุณ ใช้ *ดอกจัน* สำหรับการกระทำ เช่น *ยิ้มเบา ๆ*" required></textarea>
+    <button class="primary" id="send">ส่ง</button>
   </form>
 </main>
-
 <script>
-const $ = id => document.getElementById(id);
-const wrap = $('wrap'), msgs = $('msgs'), input = $('input'), sendBtn = $('send');
-let chats = [], cur = null, busy = false, stopFlag = false;
-
-const uid = () => Math.random().toString(36).slice(2, 10);
-const md = t => DOMPurify.sanitize(marked.parse(t || ''), {ADD_ATTR: ['target']});
-
-// ---------- persistence (Puter KV, falls back to memory) ----------
-async function load() {
-  try { chats = JSON.parse((await puter.kv.get('chats')) || '[]'); } catch { chats = []; }
-  const last = await puter.kv.get('model').catch(() => null);
-  if (last) $('model').value = last;
+const PRESETS=[
+{n:"ไอริน — นักเวทย์ผู้เย็นชา",p:"คุณคือไอริน นักเวทย์หญิงแห่งหอคอยน้ำแข็ง พูดน้อย เย็นชา แต่แอบใจดี ผู้ใช้เป็นนักเดินทางที่มาขอความช่วยเหลือ",g:"*ไอรินเงยหน้าจากหนังสือเวทมนตร์เล่มหนา* \"เจ้าเดินผ่านพายุมาถึงที่นี่ทำไม\""},
+{n:"ทีมสืบสวน — นักสืบยุคนัวร์",p:"คุณคือนักสืบเอกชนในเมืองฝนตกยุค 1940 พูดกระชับ ประชดเล็กน้อย ผู้ใช้เป็นลูกความที่นำคดีลึกลับมาให้",g:"*ควันบุหรี่ลอยผ่านแสงไฟ* \"นั่งสิ แล้วเล่าให้ฟังว่าใครทำให้คุณนอนไม่หลับ\""},
+{n:"คาเฟ่เพื่อนสนิท — สบาย ๆ",p:"คุณคือเพื่อนสนิทวัยเดียวกับผู้ใช้ เจ้าของคาเฟ่เล็ก ๆ พูดเป็นกันเอง ขี้เล่น ใส่ใจ ตอบสั้นแบบคุยแชต",g:"*วางกาแฟแก้วโปรดตรงหน้า* \"วันนี้เป็นไงบ้าง หน้าตาเหมือนมีเรื่องจะเล่า\""}];
+const $=id=>document.getElementById(id);
+const S=JSON.parse(localStorage.getItem("rp_settings")||"{}");
+const cfg={base:S.base||"https://api.freetheai.org/v1",model:S.model||"fta/bbl/gpt-5.4-mini",key:S.key||"ftai_4d3abc98a220f36e00d5a7c690228f31e8a8cfc8c541521f",temp:S.temp??0.9};
+let hist=JSON.parse(localStorage.getItem("rp_hist")||"[]"), busy=false;
+PRESETS.forEach((x,i)=>$("preset").add(new Option(x.n,i)));
+function loadPreset(i){const x=PRESETS[i];$("name").value=x.n.split(" — ")[0];$("persona").value=x.p;$("greet").value=x.g}
+const saved=JSON.parse(localStorage.getItem("rp_char")||"null");
+if(saved){$("name").value=saved.name;$("persona").value=saved.persona;$("greet").value=saved.greet}else loadPreset(0);
+["base","model","key","temp"].forEach(k=>{$(k).value=cfg[k];$(k).onchange=()=>{cfg[k]=k==="temp"?+$(k).value:$(k).value.trim();localStorage.setItem("rp_settings",JSON.stringify(cfg))}});
+$("preset").onchange=e=>loadPreset(e.target.value);
+const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const fmt=s=>esc(s).replace(/\*([^*\n]+)\*/g,"<em>*$1*</em>");
+function add(role,text){const d=document.createElement("div");d.className="m "+(role==="assistant"?"ai":"me");
+  d.innerHTML=(role==="assistant"?`<span class="who">${esc($("name").value)}</span>`:"")+`<span class="t">${fmt(text)}</span>`;
+  $("log").append(d);$("log").scrollTop=1e9;return d.querySelector(".t")}
+function render(){$("log").innerHTML="";$("title").textContent=$("name").value||"Roleplay";
+  if(!hist.length){$("log").innerHTML='<div class="empty">กด "เริ่มฉากใหม่" ทางซ้ายเพื่อเปิดเรื่อง หรือพิมพ์ข้อความแรกได้เลย</div>';return}
+  hist.forEach(m=>add(m.role,m.content))}
+const save=()=>localStorage.setItem("rp_hist",JSON.stringify(hist));
+function sys(){return `${$("persona").value}\n\nกติกา: สวมบทบาทเป็น "${$("name").value}" ตลอด ห้ามหลุดบท เขียนการกระทำในเครื่องหมาย *...* และบทพูดในเครื่องหมายคำพูด ตอบเป็นภาษาเดียวกับผู้ใช้ ห้ามพูดหรือตัดสินใจแทนตัวละครของผู้ใช้`}
+function err(msg){const d=document.createElement("div");d.className="err";d.textContent=msg;$("log").append(d);$("log").scrollTop=1e9}
+async function reply(){
+  busy=true;$("send").disabled=true;$("regen").disabled=true;
+  const t=add("assistant","…");let out="";
+  try{
+    const r=await fetch(cfg.base.replace(/\/$/,"")+"/chat/completions",{method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":"Bearer "+cfg.key},
+      body:JSON.stringify({model:cfg.model,stream:true,temperature:cfg.temp,messages:[{role:"system",content:sys()},...hist.slice(-40)]})});
+    if(!r.ok)throw new Error(`API ${r.status}: ${(await r.text()).slice(0,200)}`);
+    const rd=r.body.getReader(),dec=new TextDecoder();let buf="";
+    for(;;){const{done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});
+      const lines=buf.split("\n");buf=lines.pop();
+      for(const l of lines){if(!l.startsWith("data:"))continue;const j=l.slice(5).trim();if(j==="[DONE]")continue;
+        try{const c=JSON.parse(j).choices?.[0]?.delta?.content;if(c){out+=c;t.innerHTML=fmt(out);$("log").scrollTop=1e9}}catch{}}}
+    if(!out)throw new Error("ไม่ได้รับข้อความตอบกลับ");
+    hist.push({role:"assistant",content:out});save();
+  }catch(e){t.closest(".m").remove();err("เชื่อมต่อไม่สำเร็จ: "+e.message+" — ตรวจ API key, ชื่อ model หรือเปิดไฟล์นี้ผ่านเบราว์เซอร์ตามปกติ")}
+  busy=false;$("send").disabled=false;$("regen").disabled=false;
 }
-async function save() {
-  try { await puter.kv.set('chats', JSON.stringify(chats.slice(0, 60))); } catch (e) { console.warn(e); }
-}
-
-// ---------- rendering ----------
-function renderList() {
-  const el = $('list'); el.innerHTML = '';
-  chats.forEach(c => {
-    const row = document.createElement('div');
-    row.className = 'chat' + (c.id === cur?.id ? ' on' : '');
-    const t = document.createElement('button'); t.className = 't'; t.textContent = c.title;
-    t.onclick = () => { open(c.id); $('side').classList.remove('open'); };
-    const x = document.createElement('button'); x.className = 'x'; x.textContent = '×';
-    x.setAttribute('aria-label', 'Delete chat'); x.onclick = () => del(c.id);
-    row.append(t, x); el.append(row);
-  });
-}
-function bubble(m) {
-  const d = document.createElement('div');
-  if (m.role === 'user') { d.className = 'm user'; d.textContent = m.content; }
-  else {
-    d.className = 'm ai';
-    d.innerHTML = '<div class="md"></div><div class="tools"></div>';
-    setAI(d, m.content);
-  }
-  wrap.append(d); return d;
-}
-function setAI(d, text, live) {
-  const b = d.querySelector('.md');
-  b.innerHTML = md(text);
-  b.classList.toggle('caret', !!live);
-  b.querySelectorAll('a').forEach(a => { a.target = '_blank'; a.rel = 'noopener'; });
-  if (!live) {
-    const tools = d.querySelector('.tools');
-    tools.innerHTML = '<button type="button">Copy</button>';
-    tools.firstChild.onclick = e => { navigator.clipboard.writeText(text); e.target.textContent = 'Copied'; setTimeout(() => e.target.textContent = 'Copy', 1200); };
-  }
-}
-function renderChat() {
-  wrap.innerHTML = '';
-  if (!cur || !cur.messages.length) {
-    wrap.innerHTML = '<div class="empty"><h2>Ask anything</h2><p>Pick any of 500+ models above. Your chats are stored in your own Puter account.</p></div>';
-  } else cur.messages.forEach(bubble);
-  msgs.scrollTop = msgs.scrollHeight;
-  renderList();
-}
-function open(id) { cur = chats.find(c => c.id === id); renderChat(); }
-function newChat() { cur = {id: uid(), title: 'New chat', messages: []}; renderChat(); input.focus(); }
-async function del(id) {
-  chats = chats.filter(c => c.id !== id);
-  if (cur?.id === id) cur = null;
-  await save(); cur ? renderChat() : newChat(); renderList();
-}
-
-// ---------- sending ----------
-async function send(text) {
-  if (!cur) newChat();
-  if (!chats.includes(cur)) chats.unshift(cur);
-  cur.messages.push({role: 'user', content: text});
-  if (cur.title === 'New chat') cur.title = text.slice(0, 40);
-  renderChat();
-  const ai = bubble({role: 'assistant', content: ''});
-  busy = true; stopFlag = false; sendBtn.textContent = 'Stop';
-  let out = '';
-  try {
-    const model = $('model').value.trim() || 'gpt-5-nano';
-    const resp = await puter.ai.chat(
-      [{role: 'system', content: 'You are a helpful assistant. Answer in Markdown.'}, ...cur.messages.map(({role, content}) => ({role, content}))],
-      {model, stream: true}
-    );
-    for await (const part of resp) {
-      if (stopFlag) break;
-      if (part?.type === 'error') throw new Error(part.message || 'Model error');
-      if (part?.text && (!part.type || part.type === 'text')) {
-        out += part.text; setAI(ai, out, true);
-        msgs.scrollTop = msgs.scrollHeight;
-      }
-    }
-    cur.messages.push({role: 'assistant', content: out || '(no response)'});
-    setAI(ai, out || '(no response)');
-    puter.kv.set('model', model).catch(() => {});
-  } catch (e) {
-    const msg = e?.error?.message || e?.message || (typeof e === 'string' ? e : 'Request failed. Check the model name and try again.');
-    if (out) { cur.messages.push({role: 'assistant', content: out}); setAI(ai, out); }
-    else ai.remove();
-    const err = document.createElement('div'); err.className = 'm ai err'; err.textContent = msg; wrap.append(err);
-  }
-  busy = false; sendBtn.textContent = 'Send';
-  await save(); renderList();
-}
-
-// ---------- events ----------
-$('form').addEventListener('submit', e => {
-  e.preventDefault();
-  if (busy) { stopFlag = true; return; }
-  const t = input.value.trim(); if (!t) return;
-  input.value = ''; input.style.height = 'auto'; send(t);
-});
-input.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); $('form').requestSubmit(); }
-});
-input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = input.scrollHeight + 'px'; });
-$('new').onclick = () => { newChat(); $('side').classList.remove('open'); };
-$('menu').onclick = () => $('side').classList.toggle('open');
-
-// Load Puter.js with retries (a single network hiccup shouldn't break the app)
-async function loadPuter() {
-  for (let i = 0; i < 4 && typeof puter === 'undefined'; i++) {
-    await new Promise(res => {
-      const s = document.createElement('script');
-      s.src = 'https://js.puter.com/v2/' + (i ? '?retry=' + i : '');
-      s.onload = s.onerror = () => { if (typeof puter === 'undefined') s.remove(); res(); };
-      document.head.append(s);
-    });
-    if (typeof puter === 'undefined') await new Promise(r => setTimeout(r, 800 * (i + 1)));
-  }
-}
-
-// ---------- init ----------
-const presets = ['gpt-5-nano', 'gpt-5.6-luna', 'claude-sonnet-4-6', 'gemini-3.1-flash-lite'];
-$('models').innerHTML = presets.map(m => `<option value="${m}">`).join('');
-(async () => {
-  await loadPuter();
-  if (typeof puter === 'undefined') {
-    wrap.innerHTML = '<div class="empty"><h2>Puter.js didn\'t load</h2><p>The browser couldn\'t download js.puter.com. In Edge, open <b>edge://flags/#enable-quic</b>, set it to Disabled, restart the browser, then reload. Also check that an ad blocker isn\'t blocking the site.</p></div>';
-    sendBtn.disabled = true; return;
-  }
-  await load(); newChat();
-  try {
-    const list = await puter.ai.listModels();
-    const ids = list.map(m => typeof m === 'string' ? m : m.id).filter(Boolean);
-    if (ids.length) $('models').innerHTML = ids.map(m => `<option value="${m}">`).join('');
-  } catch {}
-})();
+$("f").onsubmit=e=>{e.preventDefault();const v=$("input").value.trim();if(!v||busy)return;
+  if(!hist.length)$("log").innerHTML="";
+  hist.push({role:"user",content:v});save();add("user",v);$("input").value="";reply()};
+$("input").onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("f").requestSubmit()}};
+$("start").onclick=()=>{localStorage.setItem("rp_char",JSON.stringify({name:$("name").value,persona:$("persona").value,greet:$("greet").value}));
+  hist=$("greet").value?[{role:"assistant",content:$("greet").value}]:[];save();render()};
+$("regen").onclick=()=>{if(busy||!hist.length)return;if(hist.at(-1).role==="assistant")hist.pop();
+  if(!hist.length||hist.at(-1).role!=="user"){render();return}save();render();reply()};
+$("undo").onclick=()=>{if(busy)return;hist.pop();save();render()};
+render();
 </script>
 </body>
 </html>
