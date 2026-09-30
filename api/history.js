@@ -10,7 +10,6 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'ไม่พบ Session ID' });
     }
 
-    // โหลดประวัติจาก Cloud
     if (method === 'GET') {
         try {
             const history = await redis.get(`chat:${sessionId}`) || [];
@@ -20,7 +19,6 @@ export default async function handler(req, res) {
         }
     }
 
-    // เซฟประวัติทับลง Cloud
     if (method === 'POST') {
         try {
             await redis.set(`chat:${sessionId}`, body.history);
@@ -30,7 +28,6 @@ export default async function handler(req, res) {
         }
     }
 
-    // ล้างประวัติใน Cloud
     if (method === 'DELETE') {
         try {
             await redis.del(`chat:${sessionId}`);
