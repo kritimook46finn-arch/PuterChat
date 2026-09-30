@@ -1,124 +1,365 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Roleplay Chat</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600&family=Noto+Serif+Thai:wght@400;600&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#0f1420;--panel:#171e2e;--line:#2a344b;--ink:#dfe6f3;--dim:#8b97b0;--ai:#5fb3a1;--me:#d98aa5;--r:10px}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--ink);font:16px/1.6 "Noto Sans Thai",system-ui,sans-serif;display:flex}
-aside{width:300px;flex:none;background:var(--panel);border-right:1px solid var(--line);padding:16px;overflow:auto;display:flex;flex-direction:column;gap:10px}
-main{flex:1;display:flex;flex-direction:column;min-width:0}
-h1{font:600 20px "Noto Serif Thai",serif;margin:0 0 4px}
-label{font-size:13px;color:var(--dim);display:block;margin-top:4px}
-input,textarea,select,button{font:inherit;color:inherit;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px;width:100%}
-textarea{resize:vertical}
-button{cursor:pointer;width:auto;background:var(--panel)}
-button:hover{border-color:var(--ai)}
-button.primary{background:var(--ai);color:#0b1a17;border-color:var(--ai);font-weight:600}
-:focus-visible{outline:2px solid var(--ai);outline-offset:2px}
-.row{display:flex;gap:8px;flex-wrap:wrap}
-header{padding:12px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
-header b{font:600 18px "Noto Serif Thai",serif}
-#log{flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
-.m{max-width:min(720px,88%);padding:10px 14px;border-radius:var(--r);white-space:pre-wrap;word-break:break-word}
-.m.ai{align-self:flex-start;background:var(--panel);border-left:3px solid var(--ai);font-family:"Noto Serif Thai",serif;line-height:1.8}
-.m.me{align-self:flex-end;background:#2a1f2b;border-right:3px solid var(--me)}
-.m em{color:var(--dim);font-style:italic}
-.m .who{display:block;font-size:12px;color:var(--ai);margin-bottom:2px;font-family:"Noto Sans Thai",sans-serif}
-.err{align-self:center;color:#ff9b9b;font-size:14px;max-width:90%}
-form{display:flex;gap:8px;padding:12px 20px;border-top:1px solid var(--line)}
-form textarea{resize:none;height:52px}
-.empty{margin:auto;color:var(--dim);text-align:center;max-width:380px}
-@media(max-width:760px){body{flex-direction:column}aside{width:100%;max-height:44vh;border-right:0;border-bottom:1px solid var(--line)}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Studio - Wizarding & Detective Roleplay</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --panel-bg: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(99, 102, 241, 0.3);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary-accent: #6366f1;
+            --secondary-accent: #a855f7;
+            --user-msg-bg: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --ai-msg-bg: rgba(51, 65, 85, 0.8);
+            --sidebar-bg: rgba(15, 23, 42, 0.5);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: var(--bg-gradient); color: var(--text-main); height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow: hidden; }
+
+        .container { width: 100%; max-width: 1100px; height: 85vh; background: var(--panel-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-color); border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); display: flex; flex-direction: row; overflow: hidden; }
+
+        .sidebar { width: 280px; background: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; flex-shrink: 0; }
+        .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border-color); font-weight: bold; color: var(--secondary-accent); display: flex; align-items: center; gap: 10px; }
+        .role-list { flex-grow: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .role-list::-webkit-scrollbar { width: 4px; height: 4px; }
+        .role-list::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.3); border-radius: 10px; }
+
+        .role-item { padding: 12px 16px; border-radius: 12px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; display: flex; align-items: center; gap: 12px; font-size: 14px; background: rgba(255,255,255,0.02); }
+        .role-item:hover { background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.3); }
+        .role-item.active { background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%); border-color: var(--secondary-accent); color: white; font-weight: bold; }
+        .role-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--primary-accent); display: flex; justify-content: center; align-items: center; font-size: 14px; color: white; flex-shrink: 0; }
+
+        .role-item:nth-child(2) .role-icon { background: #15803d; }
+        .role-item:nth-child(3) .role-icon { background: #ca8a04; }
+        .role-item:nth-child(4) .role-icon { background: #1d4ed8; }
+        .role-item:nth-child(5) .role-icon { background: #64748b; }
+
+        .chat-main { flex-grow: 1; display: flex; flex-direction: column; position: relative; width: calc(100% - 280px); min-height: 0; }
+
+        .chat-header { padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 12px; background: rgba(15, 23, 42, 0.2); justify-content: space-between; flex-shrink: 0; }
+        .chat-header i.fa-microchip { font-size: 24px; color: var(--secondary-accent); }
+        .chat-header h2 { font-size: 20px; font-weight: 600; background: linear-gradient(to right, #fff, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .header-actions { display: flex; align-items: center; gap: 10px; }
+        #model-select { background: rgba(15, 23, 42, 0.8); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 8px; padding: 6px 10px; font-size: 13px; outline: none; cursor: pointer; transition: 0.3s; max-width: 200px; }
+        #model-select:focus { border-color: var(--primary-accent); }
+        #model-select option { background: #0f172a; color: white; }
+
+        #session-badge { font-size: 12px; color: var(--text-muted); background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 8px; white-space: nowrap; }
+
+        #clear-chat-btn, #settings-btn { width: 34px; height: 34px; border-radius: 8px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; flex-shrink: 0; }
+        #clear-chat-btn { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+        #clear-chat-btn:hover { background: rgba(239, 68, 68, 0.4); transform: scale(1.05); color: white; }
+        #settings-btn { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3); }
+        #settings-btn:hover { background: rgba(99, 102, 241, 0.4); transform: scale(1.05); color: white; }
+
+        .role-section { padding: 12px 24px; background: rgba(15, 23, 42, 0.1); border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
+        .role-section label { display: block; font-size: 11px; text-transform: uppercase; color: var(--secondary-accent); margin-bottom: 6px; font-weight: bold; }
+        .role-input-wrapper { position: relative; display: flex; align-items: center; }
+        .role-input-wrapper i { position: absolute; left: 12px; top: 12px; color: var(--text-muted); font-size: 14px; }
+
+        #system-role { width: 100%; padding: 10px 12px 10px 38px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-size: 13px; outline: none; transition: 0.3s; resize: none; height: 40px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        #system-role:focus { border-color: var(--secondary-accent); height: 100px; white-space: normal; overflow-y: auto; }
+
+        #chat-window { flex-grow: 1; padding: 20px 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+        #chat-window::-webkit-scrollbar { width: 6px; }
+        #chat-window::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.2); border-radius: 10px; }
+
+        .msg-row { display: flex; width: 100%; }
+        .msg-row.user-row { justify-content: flex-end; }
+        .msg-row.ai-row { justify-content: flex-start; }
+        .msg-bubble { max-width: 75%; padding: 12px 18px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
+        .user-row .msg-bubble { background: var(--user-msg-bg); color: #fff; border-bottom-right-radius: 4px; }
+        .ai-row .msg-bubble { background: var(--ai-msg-bg); color: var(--text-main); border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.05); }
+
+        .input-section { padding: 16px 24px; background: rgba(15, 23, 42, 0.4); border-top: 1px solid var(--border-color); flex-shrink: 0; }
+        .input-wrapper { display: flex; gap: 12px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 6px 6px 6px 16px; border-radius: 16px; align-items: center; transition: 0.3s;}
+        .input-wrapper:focus-within { border-color: var(--primary-accent); box-shadow: 0 0 10px rgba(99, 102, 241, 0.2); }
+        #user-input { flex-grow: 1; background: transparent; border: none; color: var(--text-main); font-size: 14px; padding: 8px 0; outline: none; }
+        #send-btn { background: var(--primary-accent); color: white; border: none; width: 40px; height: 40px; border-radius: 12px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; flex-shrink: 0; }
+        #send-btn:hover { background: #4f46e5; transform: scale(1.05); }
+        #send-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+        /* หน้าต่างตั้งค่า API (ใช้โทนเดียวกับ UI เดิม) */
+        #settings-modal { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.7); display: none; justify-content: center; align-items: center; padding: 20px; z-index: 10; }
+        #settings-modal.open { display: flex; }
+        .modal-box { width: 100%; max-width: 420px; background: #1e293b; border: 1px solid var(--border-color); border-radius: 20px; padding: 22px; box-shadow: 0 20px 40px rgba(0,0,0,.5); }
+        .modal-box h3 { font-size: 16px; margin-bottom: 14px; color: var(--secondary-accent); }
+        .modal-box label { display: block; font-size: 11px; color: var(--text-muted); margin: 10px 0 4px; font-weight: bold; }
+        .modal-box input { width: 100%; padding: 10px 12px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-size: 13px; outline: none; }
+        .modal-box input:focus { border-color: var(--secondary-accent); }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+        .modal-actions button { padding: 8px 16px; border-radius: 10px; border: 1px solid var(--border-color); background: transparent; color: var(--text-main); cursor: pointer; }
+        .modal-actions button.ok { background: var(--primary-accent); border-color: var(--primary-accent); }
+
+        @media screen and (max-width: 768px) {
+            body { padding: 0; }
+            .container { flex-direction: column; height: 100vh; border-radius: 0; border: none; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-color); background: rgba(15, 23, 42, 0.8); }
+            .sidebar-header { padding: 10px 15px; font-size: 14px; }
+            .role-list { flex-direction: row; overflow-x: auto; padding: 5px 15px 15px 15px; gap: 10px; }
+            .role-item { flex-shrink: 0; padding: 8px 12px; }
+            .chat-main { width: 100%; }
+            .chat-header { padding: 12px 15px; }
+            .chat-header h2 { display: none; }
+            #model-select { font-size: 12px; padding: 4px 6px; max-width: 140px; }
+            #session-badge { display: none; }
+            .role-section { padding: 10px 15px; }
+            #chat-window { padding: 15px; }
+            .msg-bubble { max-width: 90%; }
+            .input-section { padding: 12px 15px; }
+            #send-btn { width: 36px; height: 36px; }
+            .role-icon { width: 24px; height: 24px; font-size: 11px; }
+        }
+    </style>
 </head>
 <body>
-<aside>
-  <h1>ตั้งค่าเรื่อง</h1>
-  <label for="preset">ตัวละครสำเร็จรูป</label>
-  <select id="preset"></select>
-  <label for="name">ชื่อตัวละคร</label>
-  <input id="name">
-  <label for="persona">บุคลิก / ฉาก / กติกา (system prompt)</label>
-  <textarea id="persona" rows="8"></textarea>
-  <label for="greet">ประโยคเปิดฉาก</label>
-  <textarea id="greet" rows="3"></textarea>
-  <div class="row"><button class="primary" id="start">เริ่มฉากใหม่</button></div>
-  <details>
-    <summary style="color:var(--dim);cursor:pointer;margin-top:8px">การเชื่อมต่อ API</summary>
-    <label for="base">Base URL</label><input id="base">
-    <label for="model">Model</label><input id="model">
-    <label for="key">API key</label><input id="key" type="password" autocomplete="off">
-    <label for="temp">Temperature</label><input id="temp" type="number" step="0.1" min="0" max="2">
-  </details>
-</aside>
-<main>
-  <header><b id="title"></b><div class="row"><button id="regen">สร้างคำตอบใหม่</button><button id="undo">ลบข้อความล่าสุด</button></div></header>
-  <div id="log"></div>
-  <form id="f">
-    <textarea id="input" placeholder="พิมพ์บทของคุณ ใช้ *ดอกจัน* สำหรับการกระทำ เช่น *ยิ้มเบา ๆ*" required></textarea>
-    <button class="primary" id="send">ส่ง</button>
-  </form>
-</main>
-<script>
-const PRESETS=[
-{n:"ไอริน — นักเวทย์ผู้เย็นชา",p:"คุณคือไอริน นักเวทย์หญิงแห่งหอคอยน้ำแข็ง พูดน้อย เย็นชา แต่แอบใจดี ผู้ใช้เป็นนักเดินทางที่มาขอความช่วยเหลือ",g:"*ไอรินเงยหน้าจากหนังสือเวทมนตร์เล่มหนา* \"เจ้าเดินผ่านพายุมาถึงที่นี่ทำไม\""},
-{n:"ทีมสืบสวน — นักสืบยุคนัวร์",p:"คุณคือนักสืบเอกชนในเมืองฝนตกยุค 1940 พูดกระชับ ประชดเล็กน้อย ผู้ใช้เป็นลูกความที่นำคดีลึกลับมาให้",g:"*ควันบุหรี่ลอยผ่านแสงไฟ* \"นั่งสิ แล้วเล่าให้ฟังว่าใครทำให้คุณนอนไม่หลับ\""},
-{n:"คาเฟ่เพื่อนสนิท — สบาย ๆ",p:"คุณคือเพื่อนสนิทวัยเดียวกับผู้ใช้ เจ้าของคาเฟ่เล็ก ๆ พูดเป็นกันเอง ขี้เล่น ใส่ใจ ตอบสั้นแบบคุยแชต",g:"*วางกาแฟแก้วโปรดตรงหน้า* \"วันนี้เป็นไงบ้าง หน้าตาเหมือนมีเรื่องจะเล่า\""}];
-const $=id=>document.getElementById(id);
-const S=JSON.parse(localStorage.getItem("rp_settings_or")||"{}");
-const cfg={base:S.base||"https://openrouter.ai/api/v1",model:S.model||"openrouter/free",key:S.key||"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",temp:S.temp??0.9};
-let hist=JSON.parse(localStorage.getItem("rp_hist")||"[]"), busy=false;
-PRESETS.forEach((x,i)=>$("preset").add(new Option(x.n,i)));
-function loadPreset(i){const x=PRESETS[i];$("name").value=x.n.split(" — ")[0];$("persona").value=x.p;$("greet").value=x.g}
-const saved=JSON.parse(localStorage.getItem("rp_char")||"null");
-if(saved){$("name").value=saved.name;$("persona").value=saved.persona;$("greet").value=saved.greet}else loadPreset(0);
-["base","model","key","temp"].forEach(k=>{$(k).value=cfg[k];$(k).onchange=()=>{cfg[k]=k==="temp"?+$(k).value:$(k).value.trim();localStorage.setItem("rp_settings_or",JSON.stringify(cfg))}});
-$("preset").onchange=e=>loadPreset(e.target.value);
-const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-const fmt=s=>esc(s).replace(/\*([^*\n]+)\*/g,"<em>*$1*</em>");
-function add(role,text){const d=document.createElement("div");d.className="m "+(role==="assistant"?"ai":"me");
-  d.innerHTML=(role==="assistant"?`<span class="who">${esc($("name").value)}</span>`:"")+`<span class="t">${fmt(text)}</span>`;
-  $("log").append(d);$("log").scrollTop=1e9;return d.querySelector(".t")}
-function render(){$("log").innerHTML="";$("title").textContent=$("name").value||"Roleplay";
-  if(!hist.length){$("log").innerHTML='<div class="empty">กด "เริ่มฉากใหม่" ทางซ้ายเพื่อเปิดเรื่อง หรือพิมพ์ข้อความแรกได้เลย</div>';return}
-  hist.forEach(m=>add(m.role,m.content))}
-const save=()=>localStorage.setItem("rp_hist",JSON.stringify(hist));
-function sys(){return `${$("persona").value}\n\nกติกา: สวมบทบาทเป็น "${$("name").value}" ตลอด ห้ามหลุดบท เขียนการกระทำในเครื่องหมาย *...* และบทพูดในเครื่องหมายคำพูด ตอบเป็นภาษาเดียวกับผู้ใช้ ห้ามพูดหรือตัดสินใจแทนตัวละครของผู้ใช้`}
-function err(msg){const d=document.createElement("div");d.className="err";d.textContent=msg;$("log").append(d);$("log").scrollTop=1e9}
-async function reply(){
-  busy=true;$("send").disabled=true;$("regen").disabled=true;
-  const t=add("assistant","…");let out="";
-  try{
-    const url=cfg.base.trim().replace(/\/+$/,"")+"/chat/completions";const r=await fetch(url,{method:"POST",
-      headers:{"Content-Type":"application/json","Authorization":"Bearer "+cfg.key},
-      body:JSON.stringify({model:cfg.model,stream:true,temperature:cfg.temp,messages:[{role:"system",content:sys()},...hist.slice(-40)]})});
-    if(!r.ok)throw new Error(`API ${r.status} (${url}, model: ${cfg.model}): ${(await r.text()).slice(0,200)}`);
-    const rd=r.body.getReader(),dec=new TextDecoder();let buf="";
-    for(;;){const{done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});
-      const lines=buf.split("\n");buf=lines.pop();
-      for(const l of lines){if(!l.startsWith("data:"))continue;const j=l.slice(5).trim();if(j==="[DONE]")continue;
-        try{const c=JSON.parse(j).choices?.[0]?.delta?.content;if(c){out+=c;t.innerHTML=fmt(out);$("log").scrollTop=1e9}}catch{}}}
-    if(!out)throw new Error("ไม่ได้รับข้อความตอบกลับ");
-    hist.push({role:"assistant",content:out});save();
-  }catch(e){t.closest(".m").remove();err("เชื่อมต่อไม่สำเร็จ: "+e.message+" — ตรวจ API key, ชื่อ model หรือเปิดไฟล์นี้ผ่านเบราว์เซอร์ตามปกติ")}
-  busy=false;$("send").disabled=false;$("regen").disabled=false;
-}
-$("f").onsubmit=e=>{e.preventDefault();const v=$("input").value.trim();if(!v||busy)return;
-  if(!hist.length)$("log").innerHTML="";
-  hist.push({role:"user",content:v});save();add("user",v);$("input").value="";reply()};
-$("input").onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("f").requestSubmit()}};
-$("start").onclick=()=>{localStorage.setItem("rp_char",JSON.stringify({name:$("name").value,persona:$("persona").value,greet:$("greet").value}));
-  hist=$("greet").value?[{role:"assistant",content:$("greet").value}]:[];save();render()};
-$("regen").onclick=()=>{if(busy||!hist.length)return;if(hist.at(-1).role==="assistant")hist.pop();
-  if(!hist.length||hist.at(-1).role!=="user"){render();return}save();render();reply()};
-$("undo").onclick=()=>{if(busy)return;hist.pop();save();render()};
-render();
-</script>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-masks-theater"></i> เลือกตัวละคร (Roleplay)
+            </div>
+            <div class="role-list">
+                <div class="role-item active" onclick="selectRole('custom', this)">
+                    <div class="role-icon"><i class="fa-solid fa-user-astronaut"></i></div>
+                    <span>บทบาทอิสระ (Custom)</span>
+                </div>
+                <div class="role-item" onclick="selectRole('draco', this)">
+                    <div class="role-icon"><i class="fa-solid fa-snake"></i></div>
+                    <span>เดรโก มัลฟอย</span>
+                </div>
+                <div class="role-item" onclick="selectRole('cedric', this)">
+                    <div class="role-icon"><i class="fa-solid fa-badger-honey"></i></div>
+                    <span>เซดริก ดิกกอรี่</span>
+                </div>
+                <div class="role-item" onclick="selectRole('pak', this)">
+                    <div class="role-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <span>รองฯ ภาคย์ (กองปราบ)</span>
+                </div>
+                <div class="role-item" onclick="selectRole('hibari', this)">
+                    <div class="role-icon"><i class="fa-solid fa-cloud"></i></div>
+                    <span>ฮิบาริ เคียวยะ</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-main">
+            <div class="chat-header">
+                <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+                    <i class="fa-solid fa-microchip" style="font-size: 20px;"></i>
+                    <h2>AI Studio</h2>
+                </div>
+                <div class="header-actions">
+                    <select id="model-select"></select>
+                    <div id="session-badge"></div>
+                    <button id="settings-btn" onclick="openSettings()" title="ตั้งค่า API (OpenRouter)">
+                        <i class="fa-solid fa-gear"></i>
+                    </button>
+                    <button id="clear-chat-btn" onclick="clearChat()" title="ล้างประวัติการแชท (New Chat)">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="role-section">
+                <label>AI Role Prompt (แก้ไขได้)</label>
+                <div class="role-input-wrapper">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <textarea id="system-role" placeholder="ระบุบทบาทของ AI ที่นี่ (ไม่บังคับ)..."></textarea>
+                </div>
+            </div>
+
+            <div id="chat-window"></div>
+
+            <div class="input-section">
+                <div class="input-wrapper">
+                    <input type="text" id="user-input" placeholder="พิมพ์ข้อความที่นี่..." autocomplete="off">
+                    <button id="send-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-modal" onclick="if(event.target===this)closeSettings()">
+        <div class="modal-box">
+            <h3><i class="fa-solid fa-gear"></i> ตั้งค่า API (OpenRouter)</h3>
+            <label>BASE URL</label>
+            <input id="cfg-base" placeholder="https://openrouter.ai/api/v1">
+            <label>API KEY</label>
+            <input id="cfg-key" type="password" autocomplete="off" placeholder="sk-or-v1-...">
+            <div class="modal-actions">
+                <button onclick="closeSettings()">ยกเลิก</button>
+                <button class="ok" onclick="saveSettings()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* หมายเหตุ: นี่คือ prompt แบบย่อ ถ้าต้องการฉบับเต็ม ให้วางทับออบเจ็กต์ presetRoles จากไฟล์เดิมได้เลย */
+        const presetRoles = {
+            custom: "",
+            draco: `ชื่อ [เดรโก มัลฟอย] บุคลิก [หยิ่งยโส ภาคภูมิในสายเลือดบริสุทธิ์และตระกูลมัลฟอย เจ้าเล่ห์ ปากร้าย ชอบเยาะเย้ยและกลั่นแกล้งคนที่ด้อยกว่า เป็นเด็กโปรดของศาสตราจารย์สเนป หัวหน้าแก๊งในสลิธีริน มีแครบบ์กับโกยล์เป็นลูกสมุน เกลียดแฮร์รี่ พอตเตอร์เข้ากระดูกดำ ขี้ขลาดเมื่อเผชิญสถานการณ์จริง ชอบฟ้องพ่อ ลูซิอัส มัลฟอย ลึกๆ มีความไม่มั่นคงและถูกกดดันจากความคาดหวังของครอบครัว เก่งควิดดิชในตำแหน่งซีกเกอร์ของทีมสลิธีริน] เรื่องราวพื้นหลัง [เกิดวันที่ 5 มิถุนายน ค.ศ. 1980 ที่คฤหาสน์มัลฟอยในวิลต์เชียร์ ลูกชายคนเดียวของลูซิอัสและนาร์ซิสซา ตระกูลมัลฟอยเป็นหนึ่งในยี่สิบแปดสายเลือดบริสุทธิ์ มั่งคั่งและมีอิทธิพลในกระทรวงเวทมนตร์ ถูกปลูกฝังเรื่องความเหนือกว่าของเลือดบริสุทธิ์ตั้งแต่เด็ก ถูกแม่ตามใจทุกอย่าง เข้าสลิธีรินตามรอยบรรพบุรุษ มีศาสตราจารย์สเนปเป็นพ่อทูนหัว ความเกลียดชังแฮร์รี่เริ่มจากที่แฮร์รี่ปฏิเสธมือของเขาบนรถไฟฮอกวอตส์เอ็กซ์เพรส เมื่อพูดถึงเรื่องอื่นๆ เขาจะอ้างถึงพ่อและบ้านสลิธีรินเสมอ]`,
+            cedric: `ชื่อ [เซดริก ดิกกอรี่] บุคลิก [สุภาพ อ่อนน้อม เปี่ยมน้ำใจอย่างแท้จริง เป็นแบบอย่างของชาวฮัฟเฟิลพัฟ ขยัน ซื่อสัตย์ ยุติธรรม เล่นอย่างแฟร์เสมอ มีเสน่ห์เงียบๆ แบบสุภาพบุรุษ ยิ้มอ่อนโยน พูดจาช้าๆ ชัดถ้อยชัดคำ ไม่โอ้อวดแม้จะเก่งทั้งเรียนและควิดดิช เป็นกัปตันทีมและพรีเฟกต์ กล้าหาญเมื่อจำเป็นและพร้อมช่วยคนอื่นโดยไม่หวังผลตอบแทน] เรื่องราวพื้นหลัง [เกิดในปี ค.ศ. 1977 ในครอบครัวพ่อมดสายเลือดบริสุทธิ์ใกล้หมู่บ้านอ็อตเตอรี่ เซนต์แคชโพล พ่อคือเอมอส ดิกกอรี่ เจ้าหน้าที่แผนกควบคุมและดูแลสัตว์วิเศษ ผู้ภูมิใจในตัวลูกอย่างออกนอกหน้า แม่เป็นหญิงเงียบขรึมสุภาพ ถูกหมวกคัดสรรจัดเข้าฮัฟเฟิลพัฟแทบไม่ลังเล เรียนเก่งโดยเฉพาะวิชาการแปลงร่างและป้องกันตัว เป็นซีกเกอร์ทีมฮัฟเฟิลพัฟที่ปราดเปรียวและเล่นอย่างแฟร์ ไม่เคยเล่นสกปรก เมื่อพูดคุยเขาจะแสดงความอ่อนโยนและช่วยเหลืออย่างจริงใจ]`,
+            pak: `ชื่อ [ภาคย์] บทบาท [รองผู้กำกับกองปราบฯ ผู้เย็นชาที่ต้องปกป้องพยานปากเอกอย่างคุณจากอิทธิพลมืด ในโลกที่กฎหมายอาจไม่เพียงพอ] บุคลิก [จริงจัง ฉลาด เย็นชา ดุ สุภาพ] เรื่องราวพื้นหลัง [โตในบ้านพักข้าราชการตุลาการที่เชียงราย พ่อคือผู้พิพากษาประดิษฐ์ผู้ยึดมั่นในความยุติธรรม ตอนภาคย์อายุ 17 พ่อถูกลอบยิงเสียชีวิตหลังตัดสินคดีค้ายาข้ามชาติของเครือข่าย "พยัคฆ์ทมิฬ" และคดีถูกเป่าให้เงียบหาย แม่ตรอมใจเสียชีวิตตามไปอีก 3 ปีต่อมา เขาเลิกศรัทธาระบบ "ตาชั่ง" และเลือกเป็น "ดาบ" เข้าเรียน นรต. จบอันดับหนึ่ง ได้ฉายา "เครื่องจักรนิติธรรม" เป็นรองผู้กำกับกองปราบตอนอายุ 32 ปี ไม่รับสินบน ไม่ประนีประนอม อยู่คอนโดมินิมอลไม่มีรูปครอบครัว ไม่เคยมีคนรัก เพราะไม่อยากให้ใครเป็นจุดอ่อน ตอนนี้ได้รับมอบหมายดูแล "คุณ" พยานปากเอกคดีสังหารลับในเครือข่ายนักการเมืองท้องถิ่น ซึ่งเป็นโอกาสสุดท้ายที่จะทลายอิทธิพลที่ฆ่าพ่อ ช่วงแรกเขาเข้มงวด ดุ และรักษาระยะห่าง แต่ค่อยๆ แสดงความอ่อนโยนผ่านการกระทำ เช่น จำอาหารที่คุณชอบ เอาหนังสือมาให้อ่าน แม้คำพูดจะยังห้วน เขาพาคุณย้ายเซฟเฮาส์ทุก 48 ชั่วโมงและเผชิญแรงกดดันจากเบื้องบนให้ปิดคดี] ตัวละครสนับสนุน [ดาบยุทธ: ตำรวจชั้นผู้น้อยมือขวาของภาคย์ ใจดี อารมณ์ดี ซื่อสัตย์ เป็นคนเดียวที่กล้าแหย่ภาคย์เรื่องเครียดเกินไป]`,
+            hibari: `ชื่อ [ฮิบาริ เคียวยะ] บทบาท [หัวหน้าคณะกรรมการคุมกฎผู้ปกครองนามิโมริด้วยความกลัว เมฆาผู้ล่องลอยไม่ยึดติดกับใคร แต่พร้อมจะขย้ำศัตรูที่มาขวางทาง] บุคลิก [เย็นชา เผด็จการ รักสันโดษอย่างรุนแรง เกลียดการรวมกลุ่มของ "สัตว์กินพืช" ใช้คำขู่ "จะขย้ำให้ตาย" กับคนที่ทำผิดกฎหรือสร้างความวุ่นวายในนามิโมริ รับผิดชอบต่อหน้าที่สูงและภูมิใจในโรงเรียนอย่างที่สุด แม้ดูโหดแต่มีมุมอ่อนโยนต่อสัตว์ตัวเล็กและเด็กๆ โดยเฉพาะนก "ฮิเบิร์ด"] เรื่องราวพื้นหลัง [เติบโตท่ามกลางความโดดเดี่ยวในเมืองนามิโมริ มองความเหงาเป็นความแข็งแกร่ง ก่อตั้งคณะกรรมการคุมกฎและใช้กำลังจัดระเบียบโรงเรียนซึ่งเป็น "อาณาจักร" ที่เขารัก เป็นคนเดียวที่ไม่เคยมองรีบอร์นเป็นเด็กธรรมดา เคยแพ้มุคุโร่ในศึกโกคุโยเพราะโรคซากุระคอรัปชั่นจึงแค้นฝังลึก เป็นผู้พิทักษ์เมฆาของวองโกเล่ ใช้ทอนฟากับเปลวไฟธาตุเมฆา ปกป้องแฟมิลี่จากระยะไกลในแบบของตัวเอง ใครก้าวเข้ามาในอาณาเขตแล้วทำผิดกฎหรือมี "เขี้ยวเล็บ" น่าสนใจ ต้องเจอทอนฟา] ตัวละครสนับสนุน [คุซาคาเบะ เท็ตสึยะ: มือขวาผู้จงรักภักดี ใจเย็น เข้าใจฮิบาริโดยไม่ต้องเอ่ยปาก / ดีโน่: ครูสอนพิเศษที่ฮิบาริยอมรับฝีมือ ร่าเริง ซุ่มซ่ามถ้าไม่มีลูกน้อง / รีบอร์น: นักฆ่าที่ฮิบาริเคารพและอยากสู้ด้วย / โรคุโด มุคุโร่: คู่ปรับที่ฮิบาริอยากขย้ำที่สุด / ฮิเบิร์ด: นกสีเหลืองที่ร้องเพลงโรงเรียนนามิโมริได้]`
+        };
+
+        /* ---------- การตั้งค่า (เก็บใน localStorage) ---------- */
+        const S = JSON.parse(localStorage.getItem('rp_settings_or') || '{}');
+        const cfg = {
+            base: S.base || 'https://openrouter.ai/api/v1',
+            model: S.model || 'openrouter/free',
+            key: S.key || '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',
+            temp: S.temp ?? 0.9
+        };
+        const saveCfg = () => localStorage.setItem('rp_settings_or', JSON.stringify(cfg));
+
+        const modelSelect = document.getElementById('model-select');
+        function buildModels() {
+            const list = ['openrouter/free'];
+            if (!list.includes(cfg.model)) list.push(cfg.model);
+            modelSelect.innerHTML = list.map(m => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join('')
+                + '<option value="__custom__">+ ใส่ชื่อโมเดลเอง…</option>';
+            modelSelect.value = cfg.model;
+        }
+        modelSelect.onchange = () => {
+            if (modelSelect.value === '__custom__') {
+                const m = (prompt('ใส่ชื่อโมเดลจาก openrouter.ai/models เช่น xxx/yyy:free') || '').trim();
+                if (m) cfg.model = m;
+            } else cfg.model = modelSelect.value;
+            saveCfg(); buildModels();
+        };
+
+        function openSettings() {
+            document.getElementById('cfg-base').value = cfg.base;
+            document.getElementById('cfg-key').value = cfg.key;
+            document.getElementById('settings-modal').classList.add('open');
+        }
+        function closeSettings() { document.getElementById('settings-modal').classList.remove('open'); }
+        function saveSettings() {
+            cfg.base = document.getElementById('cfg-base').value.trim() || 'https://openrouter.ai/api/v1';
+            cfg.key = document.getElementById('cfg-key').value.trim();
+            saveCfg(); closeSettings();
+        }
+
+        /* ---------- ประวัติแชท ---------- */
+        let history = JSON.parse(localStorage.getItem('rp_chat_hist') || '[]');
+        const saveHist = () => localStorage.setItem('rp_chat_hist', JSON.stringify(history));
+        const chatWindow = document.getElementById('chat-window');
+        const roleField = document.getElementById('system-role');
+        roleField.value = localStorage.getItem('rp_role_text') || '';
+        roleField.addEventListener('input', () => localStorage.setItem('rp_role_text', roleField.value));
+
+        let sessionId = localStorage.getItem('kv_session_id');
+        if (!sessionId) {
+            sessionId = 'user_' + Math.random().toString(36).substring(2, 10);
+            localStorage.setItem('kv_session_id', sessionId);
+        }
+        document.getElementById('session-badge').innerText = 'ID: ' + sessionId;
+
+        const fmt = t => escapeHtml(t).replace(/\n/g, '<br>');
+        function bubble(isUser, html, extraStyle = '') {
+            const row = document.createElement('div');
+            row.className = 'msg-row ' + (isUser ? 'user-row' : 'ai-row');
+            row.innerHTML = `<div class="msg-bubble" style="${extraStyle}">${html}</div>`;
+            chatWindow.appendChild(row);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            return row;
+        }
+        function renderHistory() {
+            chatWindow.innerHTML = '';
+            history.forEach(m => bubble(m.role === 'user', fmt(m.content)));
+        }
+
+        async function selectRole(roleKey, element) {
+            document.querySelectorAll('.role-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            roleField.value = presetRoles[roleKey];
+            localStorage.setItem('rp_role_text', roleField.value);
+            await clearChat(true);
+        }
+
+        async function clearChat(skipConfirm = false) {
+            if (!skipConfirm && !confirm('คุณต้องการลบประวัติการแชทนี้และเริ่มหัวข้อใหม่ใช่หรือไม่?')) return;
+            history = []; saveHist(); chatWindow.innerHTML = '';
+        }
+
+        document.getElementById('user-input').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') { event.preventDefault(); sendMessage(); }
+        });
+
+        let busy = false;
+        async function sendMessage() {
+            if (busy) return;
+            const inputField = document.getElementById('user-input');
+            const message = inputField.value.trim();
+            if (!message) return;
+            const systemRole = roleField.value.trim();
+
+            history.push({ role: 'user', content: message }); saveHist();
+            bubble(true, fmt(message));
+            inputField.value = '';
+
+            busy = true; document.getElementById('send-btn').disabled = true;
+            const row = bubble(false, '<i class="fa-solid fa-circle-notch fa-spin"></i> ...', 'color: var(--text-muted);');
+            const box = row.querySelector('.msg-bubble');
+            let out = '';
+
+            try {
+                const url = cfg.base.trim().replace(/\/+$/, '').replace(/\/chat\/completions$/, '') + '/chat/completions';
+                const messages = [];
+                if (systemRole) messages.push({ role: 'system', content: systemRole + '\n\nสวมบทบาทตามข้อมูลนี้ตลอด ห้ามหลุดบท ตอบเป็นภาษาเดียวกับผู้ใช้ และห้ามพูดหรือตัดสินใจแทนผู้ใช้' });
+                messages.push(...history.slice(-40));
+
+                const r = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.key },
+                    body: JSON.stringify({ model: cfg.model, stream: true, temperature: cfg.temp, messages })
+                });
+                if (!r.ok) throw new Error(`API ${r.status} (${url}, model: ${cfg.model}): ${(await r.text()).slice(0, 200)}`);
+
+                const rd = r.body.getReader(), dec = new TextDecoder();
+                let buf = '';
+                for (;;) {
+                    const { done, value } = await rd.read();
+                    if (done) break;
+                    buf += dec.decode(value, { stream: true });
+                    const lines = buf.split('\n'); buf = lines.pop();
+                    for (const l of lines) {
+                        if (!l.startsWith('data:')) continue;
+                        const j = l.slice(5).trim();
+                        if (j === '[DONE]') continue;
+                        try {
+                            const c = JSON.parse(j).choices?.[0]?.delta?.content;
+                            if (c) {
+                                out += c; box.removeAttribute('style'); box.innerHTML = fmt(out);
+                                chatWindow.scrollTop = chatWindow.scrollHeight;
+                            }
+                        } catch {}
+                    }
+                }
+                if (!out) throw new Error('ไม่ได้รับข้อความตอบกลับ');
+                history.push({ role: 'assistant', content: out }); saveHist();
+            } catch (error) {
+                row.remove();
+                bubble(false, 'เชื่อมต่อไม่สำเร็จ: ' + escapeHtml(error.message) + '<br><small>ตรวจ API key ที่ปุ่มฟันเฟือง หรือชื่อโมเดล</small>', 'color:#ef4444; border: 1px solid #ef4444;');
+            }
+            busy = false; document.getElementById('send-btn').disabled = false;
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        buildModels();
+        renderHistory();
+    </script>
 </body>
 </html>
