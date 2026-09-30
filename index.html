@@ -85,7 +85,7 @@
         #send-btn:hover { background: #4f46e5; transform: scale(1.05); }
         #send-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
-        /* หน้าต่างตั้งค่า API (ใช้โทนเดียวกับ UI เดิม) */
+        /* หน้าต่างตั้งค่า API */
         #settings-modal { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.7); display: none; justify-content: center; align-items: center; padding: 20px; z-index: 10; }
         #settings-modal.open { display: flex; }
         .modal-box { width: 100%; max-width: 420px; background: #1e293b; border: 1px solid var(--border-color); border-radius: 20px; padding: 22px; box-shadow: 0 20px 40px rgba(0,0,0,.5); }
@@ -201,7 +201,6 @@
     </div>
 
     <script>
-        /* หมายเหตุ: นี่คือ prompt แบบย่อ ถ้าต้องการฉบับเต็ม ให้วางทับออบเจ็กต์ presetRoles จากไฟล์เดิมได้เลย */
         const presetRoles = {
             custom: "",
             draco: `ชื่อ [เดรโก มัลฟอย] บุคลิก [หยิ่งยโส ภาคภูมิในสายเลือดบริสุทธิ์และตระกูลมัลฟอย เจ้าเล่ห์ ปากร้าย ชอบเยาะเย้ยและกลั่นแกล้งคนที่ด้อยกว่า เป็นเด็กโปรดของศาสตราจารย์สเนป หัวหน้าแก๊งในสลิธีริน มีแครบบ์กับโกยล์เป็นลูกสมุน เกลียดแฮร์รี่ พอตเตอร์เข้ากระดูกดำ ขี้ขลาดเมื่อเผชิญสถานการณ์จริง ชอบฟ้องพ่อ ลูซิอัส มัลฟอย ลึกๆ มีความไม่มั่นคงและถูกกดดันจากความคาดหวังของครอบครัว เก่งควิดดิชในตำแหน่งซีกเกอร์ของทีมสลิธีริน] เรื่องราวพื้นหลัง [เกิดวันที่ 5 มิถุนายน ค.ศ. 1980 ที่คฤหาสน์มัลฟอยในวิลต์เชียร์ ลูกชายคนเดียวของลูซิอัสและนาร์ซิสซา ตระกูลมัลฟอยเป็นหนึ่งในยี่สิบแปดสายเลือดบริสุทธิ์ มั่งคั่งและมีอิทธิพลในกระทรวงเวทมนตร์ ถูกปลูกฝังเรื่องความเหนือกว่าของเลือดบริสุทธิ์ตั้งแต่เด็ก ถูกแม่ตามใจทุกอย่าง เข้าสลิธีรินตามรอยบรรพบุรุษ มีศาสตราจารย์สเนปเป็นพ่อทูนหัว ความเกลียดชังแฮร์รี่เริ่มจากที่แฮร์รี่ปฏิเสธมือของเขาบนรถไฟฮอกวอตส์เอ็กซ์เพรส เมื่อพูดถึงเรื่องอื่นๆ เขาจะอ้างถึงพ่อและบ้านสลิธีรินเสมอ]`,
@@ -210,7 +209,6 @@
             hibari: `ชื่อ [ฮิบาริ เคียวยะ] บทบาท [หัวหน้าคณะกรรมการคุมกฎผู้ปกครองนามิโมริด้วยความกลัว เมฆาผู้ล่องลอยไม่ยึดติดกับใคร แต่พร้อมจะขย้ำศัตรูที่มาขวางทาง] บุคลิก [เย็นชา เผด็จการ รักสันโดษอย่างรุนแรง เกลียดการรวมกลุ่มของ "สัตว์กินพืช" ใช้คำขู่ "จะขย้ำให้ตาย" กับคนที่ทำผิดกฎหรือสร้างความวุ่นวายในนามิโมริ รับผิดชอบต่อหน้าที่สูงและภูมิใจในโรงเรียนอย่างที่สุด แม้ดูโหดแต่มีมุมอ่อนโยนต่อสัตว์ตัวเล็กและเด็กๆ โดยเฉพาะนก "ฮิเบิร์ด"] เรื่องราวพื้นหลัง [เติบโตท่ามกลางความโดดเดี่ยวในเมืองนามิโมริ มองความเหงาเป็นความแข็งแกร่ง ก่อตั้งคณะกรรมการคุมกฎและใช้กำลังจัดระเบียบโรงเรียนซึ่งเป็น "อาณาจักร" ที่เขารัก เป็นคนเดียวที่ไม่เคยมองรีบอร์นเป็นเด็กธรรมดา เคยแพ้มุคุโร่ในศึกโกคุโยเพราะโรคซากุระคอรัปชั่นจึงแค้นฝังลึก เป็นผู้พิทักษ์เมฆาของวองโกเล่ ใช้ทอนฟากับเปลวไฟธาตุเมฆา ปกป้องแฟมิลี่จากระยะไกลในแบบของตัวเอง ใครก้าวเข้ามาในอาณาเขตแล้วทำผิดกฎหรือมี "เขี้ยวเล็บ" น่าสนใจ ต้องเจอทอนฟา] ตัวละครสนับสนุน [คุซาคาเบะ เท็ตสึยะ: มือขวาผู้จงรักภักดี ใจเย็น เข้าใจฮิบาริโดยไม่ต้องเอ่ยปาก / ดีโน่: ครูสอนพิเศษที่ฮิบาริยอมรับฝีมือ ร่าเริง ซุ่มซ่ามถ้าไม่มีลูกน้อง / รีบอร์น: นักฆ่าที่ฮิบาริเคารพและอยากสู้ด้วย / โรคุโด มุคุโร่: คู่ปรับที่ฮิบาริอยากขย้ำที่สุด / ฮิเบิร์ด: นกสีเหลืองที่ร้องเพลงโรงเรียนนามิโมริได้]`
         };
 
-        /* ---------- การตั้งค่า (เก็บใน localStorage) ---------- */
         const S = JSON.parse(localStorage.getItem('rp_settings_or') || '{}');
         const cfg = {
             base: S.base || 'https://openrouter.ai/api/v1',
@@ -249,7 +247,7 @@
         }
 
         /* ---------- ประวัติแชท (Cloud Sync) ---------- */
-        let history = []; 
+        let chatHistory = []; 
         let sessionId = localStorage.getItem('kv_session_id');
         if (!sessionId) {
             sessionId = 'user_' + Math.random().toString(36).substring(2, 10);
@@ -262,13 +260,12 @@
         roleField.value = localStorage.getItem('rp_role_text') || presetRoles.custom;
         roleField.addEventListener('input', () => localStorage.setItem('rp_role_text', roleField.value));
 
-        // 1. ฟังก์ชันส่งประวัติแชทขึ้นไปเซฟบน Cloud ทันทีที่มีข้อความใหม่
         const saveHist = async () => {
             try {
                 await fetch('/api/history', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sessionId, history })
+                    body: JSON.stringify({ sessionId, history: chatHistory })
                 });
             } catch (e) {
                 console.error("เซฟคลาวด์ขัดข้อง", e);
@@ -285,39 +282,41 @@
             return row;
         }
 
-        // 2. โหลดประวัติจาก Cloud ตอนเปิดหน้าเว็บ
         async function loadCloudHistory() {
             chatWindow.innerHTML = '<div class="msg-row ai-row"><div class="msg-bubble" style="color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> กำลังซิงค์ข้อมูลจาก Cloud...</div></div>';
             try {
                 const res = await fetch(`/api/history?sessionId=${sessionId}`);
                 const data = await res.json();
-                history = data.history || [];
+                chatHistory = data.history || [];
                 
                 chatWindow.innerHTML = '';
-                history.forEach(m => bubble(m.role === 'user', fmt(m.content)));
+                chatHistory.forEach(m => bubble(m.role === 'user', fmt(m.content)));
             } catch (e) {
-                chatWindow.innerHTML = '<div class="msg-row ai-row"><div class="msg-bubble" style="color: #ef4444;">เชื่อมต่อ Cloud ไม่สำเร็จ</div></div>';
+                chatWindow.innerHTML = '<div class="msg-row ai-row"><div class="msg-bubble" style="color: #ef4444;">เชื่อมต่อ Cloud ไม่สำเร็จ (หรือคุณอาจยังไม่ได้อัปโหลดไฟล์ /api/history.js)</div></div>';
             }
         }
 
         async function selectRole(roleKey, element) {
             document.querySelectorAll('.role-item').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
-            roleField.value = presetRoles[roleKey];
+            roleField.value = presetRoles[roleKey] || '';
             localStorage.setItem('rp_role_text', roleField.value);
             await clearChat(true);
         }
 
         async function clearChat(skipConfirm = false) {
             if (!skipConfirm && !confirm('คุณต้องการลบประวัติการแชทนี้และเริ่มหัวข้อใหม่ใช่หรือไม่?')) return;
-            history = []; 
+            chatHistory = []; 
             chatWindow.innerHTML = '';
             
-            // 3. สั่งลบข้อมูลออกจาก Cloud
             try {
                 await fetch(`/api/history?sessionId=${sessionId}`, { method: 'DELETE' });
             } catch (e) {}
         }
+
+        document.getElementById('user-input').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') { event.preventDefault(); sendMessage(); }
+        });
 
         let busy = false;
         async function sendMessage() {
@@ -327,7 +326,8 @@
             if (!message) return;
             const systemRole = roleField.value.trim();
 
-            history.push({ role: 'user', content: message }); saveHist();
+            chatHistory.push({ role: 'user', content: message }); 
+            saveHist();
             bubble(true, fmt(message));
             inputField.value = '';
 
@@ -340,7 +340,7 @@
                 const url = cfg.base.trim().replace(/\/+$/, '').replace(/\/chat\/completions$/, '') + '/chat/completions';
                 const messages = [];
                 if (systemRole) messages.push({ role: 'system', content: systemRole + '\n\nสวมบทบาทตามข้อมูลนี้ตลอด ห้ามหลุดบท ตอบเป็นภาษาเดียวกับผู้ใช้ และห้ามพูดหรือตัดสินใจแทนผู้ใช้' });
-                messages.push(...history.slice(-40));
+                messages.push(...chatHistory.slice(-40));
 
                 const r = await fetch(url, {
                     method: 'POST',
@@ -370,7 +370,8 @@
                     }
                 }
                 if (!out) throw new Error('ไม่ได้รับข้อความตอบกลับ');
-                history.push({ role: 'assistant', content: out }); saveHist();
+                chatHistory.push({ role: 'assistant', content: out }); 
+                saveHist();
             } catch (error) {
                 row.remove();
                 bubble(false, 'เชื่อมต่อไม่สำเร็จ: ' + escapeHtml(error.message) + '<br><small>ตรวจ API key ที่ปุ่มฟันเฟือง หรือชื่อโมเดล</small>', 'color:#ef4444; border: 1px solid #ef4444;');
@@ -384,7 +385,7 @@
         }
 
         buildModels();
-        loadCloudHistory(); // เปลี่ยนเป็นบรรทัดนี้
+        loadCloudHistory();
     </script>
 </body>
 </html>
