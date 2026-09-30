@@ -71,14 +71,14 @@ const PRESETS=[
 {n:"ทีมสืบสวน — นักสืบยุคนัวร์",p:"คุณคือนักสืบเอกชนในเมืองฝนตกยุค 1940 พูดกระชับ ประชดเล็กน้อย ผู้ใช้เป็นลูกความที่นำคดีลึกลับมาให้",g:"*ควันบุหรี่ลอยผ่านแสงไฟ* \"นั่งสิ แล้วเล่าให้ฟังว่าใครทำให้คุณนอนไม่หลับ\""},
 {n:"คาเฟ่เพื่อนสนิท — สบาย ๆ",p:"คุณคือเพื่อนสนิทวัยเดียวกับผู้ใช้ เจ้าของคาเฟ่เล็ก ๆ พูดเป็นกันเอง ขี้เล่น ใส่ใจ ตอบสั้นแบบคุยแชต",g:"*วางกาแฟแก้วโปรดตรงหน้า* \"วันนี้เป็นไงบ้าง หน้าตาเหมือนมีเรื่องจะเล่า\""}];
 const $=id=>document.getElementById(id);
-const S=JSON.parse(localStorage.getItem("rp_settings")||"{}");
-const cfg={base:S.base||"https://api.freetheai.org/v1",model:S.model||"fta/bbl/gpt-5.4-mini",key:S.key||"ftai_4d3abc98a220f36e00d5a7c690228f31e8a8cfc8c541521f",temp:S.temp??0.9};
+const S=JSON.parse(localStorage.getItem("rp_settings_or")||"{}");
+const cfg={base:S.base||"https://openrouter.ai/api/v1",model:S.model||"openrouter/free",key:S.key||"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",temp:S.temp??0.9};
 let hist=JSON.parse(localStorage.getItem("rp_hist")||"[]"), busy=false;
 PRESETS.forEach((x,i)=>$("preset").add(new Option(x.n,i)));
 function loadPreset(i){const x=PRESETS[i];$("name").value=x.n.split(" — ")[0];$("persona").value=x.p;$("greet").value=x.g}
 const saved=JSON.parse(localStorage.getItem("rp_char")||"null");
 if(saved){$("name").value=saved.name;$("persona").value=saved.persona;$("greet").value=saved.greet}else loadPreset(0);
-["base","model","key","temp"].forEach(k=>{$(k).value=cfg[k];$(k).onchange=()=>{cfg[k]=k==="temp"?+$(k).value:$(k).value.trim();localStorage.setItem("rp_settings",JSON.stringify(cfg))}});
+["base","model","key","temp"].forEach(k=>{$(k).value=cfg[k];$(k).onchange=()=>{cfg[k]=k==="temp"?+$(k).value:$(k).value.trim();localStorage.setItem("rp_settings_or",JSON.stringify(cfg))}});
 $("preset").onchange=e=>loadPreset(e.target.value);
 const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
 const fmt=s=>esc(s).replace(/\*([^*\n]+)\*/g,"<em>*$1*</em>");
