@@ -248,20 +248,32 @@
             saveCfg(); closeSettings();
         }
 
-        /* ---------- ประวัติแชท ---------- */
-        let history = JSON.parse(localStorage.getItem('rp_chat_hist') || '[]');
-        const saveHist = () => localStorage.setItem('rp_chat_hist', JSON.stringify(history));
-        const chatWindow = document.getElementById('chat-window');
-        const roleField = document.getElementById('system-role');
-        roleField.value = localStorage.getItem('rp_role_text') || '';
-        roleField.addEventListener('input', () => localStorage.setItem('rp_role_text', roleField.value));
-
+        /* ---------- ประวัติแชท (Cloud Sync) ---------- */
+        let history = []; 
         let sessionId = localStorage.getItem('kv_session_id');
         if (!sessionId) {
             sessionId = 'user_' + Math.random().toString(36).substring(2, 10);
             localStorage.setItem('kv_session_id', sessionId);
         }
         document.getElementById('session-badge').innerText = 'ID: ' + sessionId;
+
+        const chatWindow = document.getElementById('chat-window');
+        const roleField = document.getElementById('system-role');
+        roleField.value = localStorage.getItem('rp_role_text') || presetRoles.custom;
+        roleField.addEventListener('input', () => localStorage.setItem('rp_role_text', roleField.value));
+
+        // 1. ฟังก์ชันส่งประวัติแชทขึ้นไปเซฟบน Cloud ทันทีที่มีข้อความใหม่
+        const saveHist = async () => {
+            try {
+                await fetch('/api/history', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId, history })
+                });
+            } catch (e) {
+                console.error("เซฟคลาวด์ขัดข้อง", e);
+            }
+        };
 
         const fmt = t => escapeHtml(t).replace(/\n/g, '<br>');
         function bubble(isUser, html, extraStyle = '') {
@@ -272,9 +284,20 @@
             chatWindow.scrollTop = chatWindow.scrollHeight;
             return row;
         }
-        function renderHistory() {
-            chatWindow.innerHTML = '';
-            history.forEach(m => bubble(m.role === 'user', fmt(m.content)));
+
+        // 2. โหลดประวัติจาก Cloud ตอนเปิดหน้าเว็บ
+        async function loadCloudHistory() {
+            chatWindow.innerHTML = '<div class="msg-row ai-row"><div class="msg-bubble" style="color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> กำลังซิงค์ข้อมูลจาก Cloud...</div></div>';
+            try {
+                const res = await fetch(`/api/history?sessionId=${sessionId}`);
+                const data = await res.json();
+                history = data.history || [];
+                
+                chatWindow.innerHTML = '';
+                history.forEach(m => bubble(m.role === 'user', fmt(m.content)));
+            } catch (e) {
+                chatWindow.innerHTML = '<div class="msg-row ai-row"><div class="msg-bubble" style="color: #ef4444;">เชื่อมต่อ Cloud ไม่สำเร็จ</div></div>';
+            }
         }
 
         async function selectRole(roleKey, element) {
@@ -287,12 +310,14 @@
 
         async function clearChat(skipConfirm = false) {
             if (!skipConfirm && !confirm('คุณต้องการลบประวัติการแชทนี้และเริ่มหัวข้อใหม่ใช่หรือไม่?')) return;
-            history = []; saveHist(); chatWindow.innerHTML = '';
+            history = []; 
+            chatWindow.innerHTML = '';
+            
+            // 3. สั่งลบข้อมูลออกจาก Cloud
+            try {
+                await fetch(`/api/history?sessionId=${sessionId}`, { method: 'DELETE' });
+            } catch (e) {}
         }
-
-        document.getElementById('user-input').addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') { event.preventDefault(); sendMessage(); }
-        });
 
         let busy = false;
         async function sendMessage() {
@@ -359,7 +384,7 @@
         }
 
         buildModels();
-        renderHistory();
+        loadCloudHistory(); // เปลี่ยนเป็นบรรทัดนี้
     </script>
 </body>
 </html>
