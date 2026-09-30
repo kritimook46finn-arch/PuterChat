@@ -6,7 +6,6 @@
 <title>Puter Chat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500&display=swap" rel="stylesheet">
-<script src="https://js.puter.com/v2/"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 <style>
@@ -210,10 +209,28 @@ input.addEventListener('input', () => { input.style.height = 'auto'; input.style
 $('new').onclick = () => { newChat(); $('side').classList.remove('open'); };
 $('menu').onclick = () => $('side').classList.toggle('open');
 
+// Load Puter.js with retries (a single network hiccup shouldn't break the app)
+async function loadPuter() {
+  for (let i = 0; i < 4 && typeof puter === 'undefined'; i++) {
+    await new Promise(res => {
+      const s = document.createElement('script');
+      s.src = 'https://js.puter.com/v2/' + (i ? '?retry=' + i : '');
+      s.onload = s.onerror = () => { if (typeof puter === 'undefined') s.remove(); res(); };
+      document.head.append(s);
+    });
+    if (typeof puter === 'undefined') await new Promise(r => setTimeout(r, 800 * (i + 1)));
+  }
+}
+
 // ---------- init ----------
 const presets = ['gpt-5-nano', 'gpt-5.6-luna', 'claude-sonnet-4-6', 'gemini-3.1-flash-lite'];
 $('models').innerHTML = presets.map(m => `<option value="${m}">`).join('');
 (async () => {
+  await loadPuter();
+  if (typeof puter === 'undefined') {
+    wrap.innerHTML = '<div class="empty"><h2>Puter.js didn\'t load</h2><p>The browser couldn\'t download js.puter.com. In Edge, open <b>edge://flags/#enable-quic</b>, set it to Disabled, restart the browser, then reload. Also check that an ad blocker isn\'t blocking the site.</p></div>';
+    sendBtn.disabled = true; return;
+  }
   await load(); newChat();
   try {
     const list = await puter.ai.listModels();
