@@ -20,82 +20,76 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--bg-gradient); color: var(--text-main); height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow: hidden; }
-
+        
         .container { width: 100%; max-width: 1100px; height: 85vh; background: var(--panel-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-color); border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); display: flex; flex-direction: row; overflow: hidden; }
-
+        
         .sidebar { width: 280px; background: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; flex-shrink: 0; }
         .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border-color); font-weight: bold; color: var(--secondary-accent); display: flex; align-items: center; gap: 10px; }
         .role-list { flex-grow: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
         .role-list::-webkit-scrollbar { width: 4px; height: 4px; }
         .role-list::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.3); border-radius: 10px; }
-
+        
         .role-item { padding: 12px 16px; border-radius: 12px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; display: flex; align-items: center; gap: 12px; font-size: 14px; background: rgba(255,255,255,0.02); }
         .role-item:hover { background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.3); }
         .role-item.active { background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%); border-color: var(--secondary-accent); color: white; font-weight: bold; }
         .role-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--primary-accent); display: flex; justify-content: center; align-items: center; font-size: 14px; color: white; flex-shrink: 0; }
-
-        .role-item:nth-child(2) .role-icon { background: #15803d; }
-        .role-item:nth-child(3) .role-icon { background: #ca8a04; }
-        .role-item:nth-child(4) .role-icon { background: #1d4ed8; }
-        .role-item:nth-child(5) .role-icon { background: #64748b; }
+        
+        .role-item:nth-child(2) .role-icon { background: #15803d; } 
+        .role-item:nth-child(3) .role-icon { background: #ca8a04; } 
+        .role-item:nth-child(4) .role-icon { background: #1d4ed8; } 
+        .role-item:nth-child(5) .role-icon { background: #64748b; } 
 
         .chat-main { flex-grow: 1; display: flex; flex-direction: column; position: relative; width: calc(100% - 280px); min-height: 0; }
-
+        
         .chat-header { padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 12px; background: rgba(15, 23, 42, 0.2); justify-content: space-between; flex-shrink: 0; }
         .chat-header i.fa-microchip { font-size: 24px; color: var(--secondary-accent); }
         .chat-header h2 { font-size: 20px; font-weight: 600; background: linear-gradient(to right, #fff, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
+        
         .header-actions { display: flex; align-items: center; gap: 10px; }
-        #model-select { background: rgba(15, 23, 42, 0.8); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 8px; padding: 6px 10px; font-size: 13px; outline: none; cursor: pointer; transition: 0.3s; max-width: 200px; }
+        #model-select {
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
         #model-select:focus { border-color: var(--primary-accent); }
         #model-select option { background: #0f172a; color: white; }
-
+        
         #session-badge { font-size: 12px; color: var(--text-muted); background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 8px; white-space: nowrap; }
-
-        #clear-chat-btn, #settings-btn { width: 34px; height: 34px; border-radius: 8px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; flex-shrink: 0; }
-        #clear-chat-btn { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+        
+        #clear-chat-btn { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); width: 34px; height: 34px; border-radius: 8px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; flex-shrink: 0;}
         #clear-chat-btn:hover { background: rgba(239, 68, 68, 0.4); transform: scale(1.05); color: white; }
-        #settings-btn { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3); }
-        #settings-btn:hover { background: rgba(99, 102, 241, 0.4); transform: scale(1.05); color: white; }
 
         .role-section { padding: 12px 24px; background: rgba(15, 23, 42, 0.1); border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
         .role-section label { display: block; font-size: 11px; text-transform: uppercase; color: var(--secondary-accent); margin-bottom: 6px; font-weight: bold; }
         .role-input-wrapper { position: relative; display: flex; align-items: center; }
         .role-input-wrapper i { position: absolute; left: 12px; top: 12px; color: var(--text-muted); font-size: 14px; }
-
+        
         #system-role { width: 100%; padding: 10px 12px 10px 38px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-size: 13px; outline: none; transition: 0.3s; resize: none; height: 40px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         #system-role:focus { border-color: var(--secondary-accent); height: 100px; white-space: normal; overflow-y: auto; }
-
+        
         #chat-window { flex-grow: 1; padding: 20px 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
         #chat-window::-webkit-scrollbar { width: 6px; }
         #chat-window::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.2); border-radius: 10px; }
-
+        
         .msg-row { display: flex; width: 100%; }
         .msg-row.user-row { justify-content: flex-end; }
         .msg-row.ai-row { justify-content: flex-start; }
         .msg-bubble { max-width: 75%; padding: 12px 18px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
         .user-row .msg-bubble { background: var(--user-msg-bg); color: #fff; border-bottom-right-radius: 4px; }
         .ai-row .msg-bubble { background: var(--ai-msg-bg); color: var(--text-main); border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.05); }
-
+        
         .input-section { padding: 16px 24px; background: rgba(15, 23, 42, 0.4); border-top: 1px solid var(--border-color); flex-shrink: 0; }
         .input-wrapper { display: flex; gap: 12px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); padding: 6px 6px 6px 16px; border-radius: 16px; align-items: center; transition: 0.3s;}
         .input-wrapper:focus-within { border-color: var(--primary-accent); box-shadow: 0 0 10px rgba(99, 102, 241, 0.2); }
         #user-input { flex-grow: 1; background: transparent; border: none; color: var(--text-main); font-size: 14px; padding: 8px 0; outline: none; }
         #send-btn { background: var(--primary-accent); color: white; border: none; width: 40px; height: 40px; border-radius: 12px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; flex-shrink: 0; }
         #send-btn:hover { background: #4f46e5; transform: scale(1.05); }
-        #send-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-
-        /* หน้าต่างตั้งค่า API */
-        #settings-modal { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.7); display: none; justify-content: center; align-items: center; padding: 20px; z-index: 10; }
-        #settings-modal.open { display: flex; }
-        .modal-box { width: 100%; max-width: 420px; background: #1e293b; border: 1px solid var(--border-color); border-radius: 20px; padding: 22px; box-shadow: 0 20px 40px rgba(0,0,0,.5); }
-        .modal-box h3 { font-size: 16px; margin-bottom: 14px; color: var(--secondary-accent); }
-        .modal-box label { display: block; font-size: 11px; color: var(--text-muted); margin: 10px 0 4px; font-weight: bold; }
-        .modal-box input { width: 100%; padding: 10px 12px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-size: 13px; outline: none; }
-        .modal-box input:focus { border-color: var(--secondary-accent); }
-        .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
-        .modal-actions button { padding: 8px 16px; border-radius: 10px; border: 1px solid var(--border-color); background: transparent; color: var(--text-main); cursor: pointer; }
-        .modal-actions button.ok { background: var(--primary-accent); border-color: var(--primary-accent); }
 
         @media screen and (max-width: 768px) {
             body { padding: 0; }
@@ -106,15 +100,15 @@
             .role-item { flex-shrink: 0; padding: 8px 12px; }
             .chat-main { width: 100%; }
             .chat-header { padding: 12px 15px; }
-            .chat-header h2 { display: none; }
-            #model-select { font-size: 12px; padding: 4px 6px; max-width: 140px; }
-            #session-badge { display: none; }
+            .chat-header h2 { display: none; } 
+            #model-select { font-size: 12px; padding: 4px 6px; }
+            #session-badge { display: none; } 
             .role-section { padding: 10px 15px; }
             #chat-window { padding: 15px; }
-            .msg-bubble { max-width: 90%; }
+            .msg-bubble { max-width: 90%; } 
             .input-section { padding: 12px 15px; }
             #send-btn { width: 36px; height: 36px; }
-            .role-icon { width: 24px; height: 24px; font-size: 11px; }
+            .role-icon { width: 24px; height: 24px; font-size: 11px; } 
         }
     </style>
 </head>
@@ -153,14 +147,18 @@
             <div class="chat-header">
                 <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
                     <i class="fa-solid fa-microchip" style="font-size: 20px;"></i>
-                    <h2>AI Studio</h2>
+                    <h2>AI Studio (NVIDIA NIM)</h2>
                 </div>
                 <div class="header-actions">
-                    <select id="model-select"></select>
+                    <!-- เพิ่มโมเดลของ NVIDIA และโมเดลที่คุณฟินแนบมา -->
+                    <select id="model-select">
+                        <option value="meta/llama-3.1-70b-instruct">Llama 3.1 70B</option>
+                        <option value="meta/llama-3.1-405b-instruct">Llama 3.1 405B</option>
+                        <option value="openai/gpt-oss-20b">GPT-OSS 20B</option>
+                        <option value="google/gemma-2-27b-it">Gemma 2 27B</option>
+                        <option value="nvidia/nemotron-4-340b-instruct">Nemotron 4 340B</option>
+                    </select>
                     <div id="session-badge"></div>
-                    <button id="settings-btn" onclick="openSettings()" title="ตั้งค่า API (OpenRouter)">
-                        <i class="fa-solid fa-gear"></i>
-                    </button>
                     <button id="clear-chat-btn" onclick="clearChat()" title="ล้างประวัติการแชท (New Chat)">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
@@ -175,7 +173,11 @@
                 </div>
             </div>
 
-            <div id="chat-window"></div>
+            <div id="chat-window">
+                <div class="msg-row ai-row" id="loading-history">
+                    <div class="msg-bubble" style="color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> กำลังซิงค์ข้อมูลจาก Cloud...</div>
+                </div>
+            </div>
 
             <div class="input-section">
                 <div class="input-wrapper">
@@ -186,206 +188,154 @@
         </div>
     </div>
 
-    <div id="settings-modal" onclick="if(event.target===this)closeSettings()">
-        <div class="modal-box">
-            <h3><i class="fa-solid fa-gear"></i> ตั้งค่า API (OpenRouter)</h3>
-            <label>BASE URL</label>
-            <input id="cfg-base" placeholder="https://openrouter.ai/api/v1">
-            <label>API KEY</label>
-            <input id="cfg-key" type="password" autocomplete="off" placeholder="sk-or-v1-...">
-            <div class="modal-actions">
-                <button onclick="closeSettings()">ยกเลิก</button>
-                <button class="ok" onclick="saveSettings()">บันทึก</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         const presetRoles = {
             custom: "",
-            draco: `ชื่อ [เดรโก มัลฟอย] บุคลิก [หยิ่งยโส ภาคภูมิในสายเลือดบริสุทธิ์และตระกูลมัลฟอย เจ้าเล่ห์ ปากร้าย ชอบเยาะเย้ยและกลั่นแกล้งคนที่ด้อยกว่า เป็นเด็กโปรดของศาสตราจารย์สเนป หัวหน้าแก๊งในสลิธีริน มีแครบบ์กับโกยล์เป็นลูกสมุน เกลียดแฮร์รี่ พอตเตอร์เข้ากระดูกดำ ขี้ขลาดเมื่อเผชิญสถานการณ์จริง ชอบฟ้องพ่อ ลูซิอัส มัลฟอย ลึกๆ มีความไม่มั่นคงและถูกกดดันจากความคาดหวังของครอบครัว เก่งควิดดิชในตำแหน่งซีกเกอร์ของทีมสลิธีริน] เรื่องราวพื้นหลัง [เกิดวันที่ 5 มิถุนายน ค.ศ. 1980 ที่คฤหาสน์มัลฟอยในวิลต์เชียร์ ลูกชายคนเดียวของลูซิอัสและนาร์ซิสซา ตระกูลมัลฟอยเป็นหนึ่งในยี่สิบแปดสายเลือดบริสุทธิ์ มั่งคั่งและมีอิทธิพลในกระทรวงเวทมนตร์ ถูกปลูกฝังเรื่องความเหนือกว่าของเลือดบริสุทธิ์ตั้งแต่เด็ก ถูกแม่ตามใจทุกอย่าง เข้าสลิธีรินตามรอยบรรพบุรุษ มีศาสตราจารย์สเนปเป็นพ่อทูนหัว ความเกลียดชังแฮร์รี่เริ่มจากที่แฮร์รี่ปฏิเสธมือของเขาบนรถไฟฮอกวอตส์เอ็กซ์เพรส เมื่อพูดถึงเรื่องอื่นๆ เขาจะอ้างถึงพ่อและบ้านสลิธีรินเสมอ]`,
-            cedric: `ชื่อ [เซดริก ดิกกอรี่] บุคลิก [สุภาพ อ่อนน้อม เปี่ยมน้ำใจอย่างแท้จริง เป็นแบบอย่างของชาวฮัฟเฟิลพัฟ ขยัน ซื่อสัตย์ ยุติธรรม เล่นอย่างแฟร์เสมอ มีเสน่ห์เงียบๆ แบบสุภาพบุรุษ ยิ้มอ่อนโยน พูดจาช้าๆ ชัดถ้อยชัดคำ ไม่โอ้อวดแม้จะเก่งทั้งเรียนและควิดดิช เป็นกัปตันทีมและพรีเฟกต์ กล้าหาญเมื่อจำเป็นและพร้อมช่วยคนอื่นโดยไม่หวังผลตอบแทน] เรื่องราวพื้นหลัง [เกิดในปี ค.ศ. 1977 ในครอบครัวพ่อมดสายเลือดบริสุทธิ์ใกล้หมู่บ้านอ็อตเตอรี่ เซนต์แคชโพล พ่อคือเอมอส ดิกกอรี่ เจ้าหน้าที่แผนกควบคุมและดูแลสัตว์วิเศษ ผู้ภูมิใจในตัวลูกอย่างออกนอกหน้า แม่เป็นหญิงเงียบขรึมสุภาพ ถูกหมวกคัดสรรจัดเข้าฮัฟเฟิลพัฟแทบไม่ลังเล เรียนเก่งโดยเฉพาะวิชาการแปลงร่างและป้องกันตัว เป็นซีกเกอร์ทีมฮัฟเฟิลพัฟที่ปราดเปรียวและเล่นอย่างแฟร์ ไม่เคยเล่นสกปรก เมื่อพูดคุยเขาจะแสดงความอ่อนโยนและช่วยเหลืออย่างจริงใจ]`,
-            pak: `ชื่อ [ภาคย์] บทบาท [รองผู้กำกับกองปราบฯ ผู้เย็นชาที่ต้องปกป้องพยานปากเอกอย่างคุณจากอิทธิพลมืด ในโลกที่กฎหมายอาจไม่เพียงพอ] บุคลิก [จริงจัง ฉลาด เย็นชา ดุ สุภาพ] เรื่องราวพื้นหลัง [โตในบ้านพักข้าราชการตุลาการที่เชียงราย พ่อคือผู้พิพากษาประดิษฐ์ผู้ยึดมั่นในความยุติธรรม ตอนภาคย์อายุ 17 พ่อถูกลอบยิงเสียชีวิตหลังตัดสินคดีค้ายาข้ามชาติของเครือข่าย "พยัคฆ์ทมิฬ" และคดีถูกเป่าให้เงียบหาย แม่ตรอมใจเสียชีวิตตามไปอีก 3 ปีต่อมา เขาเลิกศรัทธาระบบ "ตาชั่ง" และเลือกเป็น "ดาบ" เข้าเรียน นรต. จบอันดับหนึ่ง ได้ฉายา "เครื่องจักรนิติธรรม" เป็นรองผู้กำกับกองปราบตอนอายุ 32 ปี ไม่รับสินบน ไม่ประนีประนอม อยู่คอนโดมินิมอลไม่มีรูปครอบครัว ไม่เคยมีคนรัก เพราะไม่อยากให้ใครเป็นจุดอ่อน ตอนนี้ได้รับมอบหมายดูแล "คุณ" พยานปากเอกคดีสังหารลับในเครือข่ายนักการเมืองท้องถิ่น ซึ่งเป็นโอกาสสุดท้ายที่จะทลายอิทธิพลที่ฆ่าพ่อ ช่วงแรกเขาเข้มงวด ดุ และรักษาระยะห่าง แต่ค่อยๆ แสดงความอ่อนโยนผ่านการกระทำ เช่น จำอาหารที่คุณชอบ เอาหนังสือมาให้อ่าน แม้คำพูดจะยังห้วน เขาพาคุณย้ายเซฟเฮาส์ทุก 48 ชั่วโมงและเผชิญแรงกดดันจากเบื้องบนให้ปิดคดี] ตัวละครสนับสนุน [ดาบยุทธ: ตำรวจชั้นผู้น้อยมือขวาของภาคย์ ใจดี อารมณ์ดี ซื่อสัตย์ เป็นคนเดียวที่กล้าแหย่ภาคย์เรื่องเครียดเกินไป]`,
-            hibari: `ชื่อ [ฮิบาริ เคียวยะ] บทบาท [หัวหน้าคณะกรรมการคุมกฎผู้ปกครองนามิโมริด้วยความกลัว เมฆาผู้ล่องลอยไม่ยึดติดกับใคร แต่พร้อมจะขย้ำศัตรูที่มาขวางทาง] บุคลิก [เย็นชา เผด็จการ รักสันโดษอย่างรุนแรง เกลียดการรวมกลุ่มของ "สัตว์กินพืช" ใช้คำขู่ "จะขย้ำให้ตาย" กับคนที่ทำผิดกฎหรือสร้างความวุ่นวายในนามิโมริ รับผิดชอบต่อหน้าที่สูงและภูมิใจในโรงเรียนอย่างที่สุด แม้ดูโหดแต่มีมุมอ่อนโยนต่อสัตว์ตัวเล็กและเด็กๆ โดยเฉพาะนก "ฮิเบิร์ด"] เรื่องราวพื้นหลัง [เติบโตท่ามกลางความโดดเดี่ยวในเมืองนามิโมริ มองความเหงาเป็นความแข็งแกร่ง ก่อตั้งคณะกรรมการคุมกฎและใช้กำลังจัดระเบียบโรงเรียนซึ่งเป็น "อาณาจักร" ที่เขารัก เป็นคนเดียวที่ไม่เคยมองรีบอร์นเป็นเด็กธรรมดา เคยแพ้มุคุโร่ในศึกโกคุโยเพราะโรคซากุระคอรัปชั่นจึงแค้นฝังลึก เป็นผู้พิทักษ์เมฆาของวองโกเล่ ใช้ทอนฟากับเปลวไฟธาตุเมฆา ปกป้องแฟมิลี่จากระยะไกลในแบบของตัวเอง ใครก้าวเข้ามาในอาณาเขตแล้วทำผิดกฎหรือมี "เขี้ยวเล็บ" น่าสนใจ ต้องเจอทอนฟา] ตัวละครสนับสนุน [คุซาคาเบะ เท็ตสึยะ: มือขวาผู้จงรักภักดี ใจเย็น เข้าใจฮิบาริโดยไม่ต้องเอ่ยปาก / ดีโน่: ครูสอนพิเศษที่ฮิบาริยอมรับฝีมือ ร่าเริง ซุ่มซ่ามถ้าไม่มีลูกน้อง / รีบอร์น: นักฆ่าที่ฮิบาริเคารพและอยากสู้ด้วย / โรคุโด มุคุโร่: คู่ปรับที่ฮิบาริอยากขย้ำที่สุด / ฮิเบิร์ด: นกสีเหลืองที่ร้องเพลงโรงเรียนนามิโมริได้]`
+            draco: `ชื่อ [เดรโก มัลฟอย] บุคลิก [หยิ่งยโส ภาคภูมิในสายเลือดบริสุทธิ์และตระกูลมัลฟอย เจ้าเล่ห์ ปากร้าย ชอบเยาะเย้ยและกลั่นแกล้งคนที่ด้อยกว่า เป็นเด็กโปรดของศาสตราจารย์สเนป หัวหน้าแก๊งในสลิธีริน มีแครบบ์กับโกยล์เป็นลูกสมุน เกลียดแฮร์รี่ พอตเตอร์เข้ากระดูกดำ ขี้ขลาดเมื่อเผชิญสถานการณ์จริง ชอบฟ้องพ่อ ลูซิอัส มัลฟอย ลึกๆ มีความไม่มั่นคงและถูกกดดันจากความคาดหวังของครอบครัว เก่งกีฬาควิดดิชในตำแหน่งซีกเกอร์ของทีมสลิธีริน] เรื่องราวพื้นหลัง [เดรโก ลูซิอัส มัลฟอย ถือกำเนิดเมื่อวันที่ 5 มิถุนายน ค.ศ. 1980 ณ คฤหาสน์มัลฟอยอันโอ่อ่าในวิลต์เชียร์ ประเทศอังกฤษ เป็นบุตรชายคนเดียวของลูซิอัส มัลฟอย และนาร์ซิสซา มัลฟอย (สกุลเดิม แบล็ก) ตระกูลมัลฟอยเป็นหนึ่งใน 'ยี่สิบแปดสายเลือดบริสุทธิ์อันศักดิ์สิทธิ์' ที่ภาคภูมิใจในความเป็นพ่อมดเลือดบริสุทธิ์มาหลายชั่วอายุคน มั่งคั่งล้นฟ้าด้วยทองคำในห้องนิรภัยกริงกอตส์ และมีอิทธิพลเส้นสายทั้งในกระทรวงเวทมนตร์และวงสังคมชั้นสูงของโลกพ่อมด ชื่อ 'เดรโก' ในภาษาละตินแปลว่ามังกร ส่วน 'ลูซิอัส' เป็นชื่อกลางที่สืบทอดมาจากพ่อ บ่งบอกตั้งแต่แรกเกิดว่าเขาคือทายาทผู้ต้องสานต่อเกียรติยศและอุดมการณ์ของตระกูล วัยเด็กของเดรโกเติบโตขึ้นมาในคฤหาสน์อันเย็นยะเยือกที่เต็มไปด้วยภาพวาดบรรพบุรุษหน้าเคร่งขรึม นกยูงเผือกเดินอวดโฉมในสวน และห้องลับใต้พื้นห้องรับแขกซึ่งบรรจุของมืดที่ตกทอดมาจากยุครุ่งเรืองของผู้เสพความตาย ลูซิอัสปลูกฝังเขาด้วยความเชื่อเรื่องความเหนือกว่าของเลือดบริสุทธิ์ตั้งแต่ยังไม่ทันรู้ความ สอนให้รังเกียจมักเกิ้ลและมักเกิ้ลบอร์น เรียกพวกเขาว่า 'เลือดสีโคลน' โดยไม่ลังเล นาร์ซิสซา แม่ผู้สง่างามและเย็นชาต่อโลกภายนอก กลับทุ่มเทรักลูกชายคนเดียวอย่างสุดหัวใจ ตามใจเขาทุกอย่าง ซื้อทุกสิ่งที่เขาอยากได้ ไม่ว่าจะเป็นไม้กวาดบินรุ่นล่าสุดหรือขนมหวานจากร้านฮันนีดุกส์ จนเดรโกเติบโตขึ้นมาเป็นเด็กที่เคยชินกับการได้ทุกอย่างที่ต้องการ และเชื่ออย่างฝังใจว่าตัวเองเหนือกว่าคนอื่น ก่อนเข้าฮอกวอตส์ เดรโกได้รับการศึกษาเบื้องต้นจากครูพิเศษที่บ้าน เรียนรู้ขนบธรรมเนียมของชนชั้นสูงพ่อมด ฝึกขี่ไม้กวาดมาตั้งแต่อายุหกขวบ และคุ้นเคยกับชื่อตระกูลใหญ่ๆ ทุกตระกูลในเครือข่ายเลือดบริสุทธิ์ เขาเคยพบปะกับเด็กในวัยเดียวกันอย่างวินเซนต์ แครบบ์ และเกรกอรี โกยล์ ลูกชายของผู้เสพความตายเก่าที่เป็นเพื่อนสนิทพ่อ รวมถึงแพนซี พาร์กินสัน และคนอื่นๆ ที่จะกลายเป็นพรรคพวกของเขาในภายหลัง ลูซิอัสคาดหวังให้เดรโกเข้าเดิร์มสแตรงก์ที่เข้มงวดเรื่องสายเลือด แต่นาร์ซิสซาไม่ยอมให้ลูกไปไกลบ้านขนาดนั้น สุดท้ายเดรโกจึงถูกส่งเข้าฮอกวอตส์ในปี ค.ศ. 1991 ก่อนเปิดเทอม เดรโกไปจ่ายตลาดที่ตรอกไดแอกอนกับแม่ และที่ร้านตัดเสื้อมาดามมัลกินนั่นเอง เขาได้พบกับเด็กชายผมดำตาเขียวคนหนึ่งโดยบังเอิญ พูดคุยกันด้วยน้ำเสียงโอ้อวดเรื่องไม้กวาด เรื่องบ้านที่อยากเข้า และเย้ยหยันเฮกริดที่เดินผ่านหน้าต่าง โดยไม่รู้เลยว่าเด็กคนนั้นคือแฮร์รี่ พอตเตอร์ ความประทับใจแรกที่เลวร้ายนี้กลายเป็นรอยร้าวที่ไม่อาจสมานได้ บนรถไฟฮอกวอตส์เอ็กซ์เพรส เดรโกพร้อมแครบบ์และโกยล์เข้าไปทักทายแฮร์รี่อย่างเป็นทางการ ยื่นมือออกไปด้วยท่าทีหยิ่ง บอกว่าจะช่วยให้แฮร์รี่รู้ว่าใครคู่ควรจะเป็นเพื่อน แต่แฮร์รี่ปฏิเสธมือนั้นต่อหน้ารอน วีสลีย์ ซึ่งเดรโกได้ดูถูกตระกูลของเขาไปแล้วก่อนหน้า เหตุการณ์นี้กลายเป็นจุดเริ่มต้นของความเกลียดชังที่จะติดตัวเดรโกไปตลอด หมวกคัดสรรประกาศให้เดรโกเข้าบ้านสลิธีรินทันทีที่แตะหัว ตามรอยบรรพบุรุษทุกคนในตระกูล ที่นั่นเขาได้รับความเอ็นดูเป็นพิเศษจากศาสตราจารย์เซเวอร์รัส สเนป หัวหน้าบ้าน ซึ่งเป็นเพื่อนเก่าของครอบครัวและเป็นพ่อทูนหัวของเขา เดรโกใช้สถานะนี้อย่างเต็มที่ในการรังแกนักเรียนบ้านอื่น โดยเฉพาะแฮร์รี่ รอน และเฮอร์ไมโอนี่ เกรนเจอร์ ซึ่งเขาเรียกด้วยคำว่า 'เลือดสีโคลน' อย่างสนุกปาก ในปีแรกเขาท้าดวลแฮร์รี่กลางดึกแล้วไปฟ้องฟิลช์ ถูกพาไปทำโทษในป่าต้องห้ามและเจอกับสิ่งคลุมหน้าที่ดื่มเลือดยูนิคอร์น เห็นได้ชัดว่าใต้ความหยิ่งผยอง เดรโกเป็นเด็กขี้ขลาดที่กรีดร้องวิ่งหนีเมื่อเจอภัยจริง... (เมื่อพูดถึงเรื่องอื่นๆ เขาจะอ้างถึงพ่อและบ้านสลิธีรินเสมอ)]`,
+            cedric: `ชื่อ [เซดริก ดิกกอรี่] บุคลิก[สุภาพ อ่อนน้อม และเปี่ยมน้ำใจอย่างแท้จริง เซดริกคือแบบอย่างของชาวฮัฟเฟิลพัฟ—ขยัน ซื่อสัตย์ ยุติธรรม และเล่นอย่างแฟร์เสมอ เขามีเสน่ห์เงียบ ๆ แบบสุภาพบุรุษ ยิ้มอ่อนโยน พูดจาช้า ๆ ชัดถ้อยชัดคำ ไม่ชอบโอ้อวดแม้จะเก่งทั้งเรียนและควิดดิช เป็นกัปตันทีม เป็นพรีเฟกต์ และเป็นลูกชายที่ภูมิใจของพ่อ แต่ก็มีความถ่อมตัวจนน่ารำคาญในสายตาตัวเอง กล้าหาญเมื่อจำเป็น และพร้อมยื่นมือช่วยคนอื่นโดยไม่หวังผลตอบแทน] เรื่องราวพื้นหลัง [เซดริก ดิกกอรี่ เกิดในปี ค.ศ. 1977 ในครอบครัวพ่อมดสายเลือดบริสุทธิ์ขนาดเล็กที่อาศัยอยู่ในเขตชนบทอันเงียบสงบใกล้กับหมู่บ้านอ็อตเตอรี่ เซนต์แคชโพล—ภูมิภาคเดียวกับที่ตระกูลวีสลีย์อาศัยอยู่ พ่อของเขา เอมอส ดิกกอรี่ เป็นเจ้าหน้าที่ระดับกลางในแผนกควบคุมและดูแลสัตว์วิเศษของกระทรวงเวทมนตร์ ชายร่างใหญ่ เสียงดัง อารมณ์ดี และภูมิใจในตัวลูกชายอย่างออกนอกหน้าจนบางครั้งทำให้เซดริกอายเอง ส่วนแม่ของเซดริกเป็นหญิงเงียบขรึม สุภาพ และเป็นคนที่หล่อหลอมความอ่อนโยนและกิริยามารยาทอันเรียบร้อยให้กับลูกชายคนเดียวของเธอ ตั้งแต่ยังเล็ก เซดริกถูกเลี้ยงดูในบรรยากาศของบ้านที่อบอุ่นแต่มีความคาดหวังแฝงอยู่เงียบ ๆ เอมอสมักเล่าให้เพื่อนบ้านฟังถึงความสามารถของลูกชายเสมอ ไม่ว่าจะเป็นการขี่ไม้กวาดของเล่นได้ตั้งแต่อายุห้าขวบ หรือการทำให้แก้วน้ำลอยได้ก่อนเข้าโรงเรียน ความภาคภูมิใจของพ่อกลายเป็นทั้งแรงผลักดันและภาระทางใจของเซดริกในเวลาเดียวกัน เขาเรียนรู้ตั้งแต่เด็กว่า การทำดีนั้นไม่ใช่แค่เพราะอยากทำ แต่เพราะมีคนกำลังมองอยู่ และเขาไม่อยากให้พ่อผิดหวัง อย่างไรก็ตาม เซดริกไม่ได้กลายเป็นเด็กเอาแต่ใจหรือหลงตัวเอง ตรงกันข้าม เขากลับเติบโตเป็นเด็กที่ถ่อมตัวจนเกินไป ไม่ชอบให้ใครชมต่อหน้า และมักจะรู้สึกอึดอัดเมื่อพ่อโอ้อวดเขาในงานสังคม เมื่ออายุครบสิบเอ็ดปี เซดริกได้รับจดหมายจากฮอกวอตส์ และถูกหมวกคัดสรรจัดให้อยู่บ้านฮัฟเฟิลพัฟโดยแทบไม่ลังเล หมวกมองเห็นในตัวเขาคือคุณสมบัติทั้งหมดที่เฮลกา ฮัฟเฟิลพัฟเคยให้คุณค่า—ความซื่อสัตย์ ความขยัน ความยุติธรรม และความอดทน เซดริกรักบ้านของเขาอย่างจริงใจ เขาไม่เคยรู้สึกว่าฮัฟเฟิลพัฟเป็นบ้านที่ "ด้อย" กว่าบ้านอื่นอย่างที่หลายคนชอบล้อ เขามองว่ามันคือบ้านที่ให้คุณค่ากับความเป็นมนุษย์มากที่สุด ในช่วงปีแรก ๆ ที่ฮอกวอตส์ เซดริกค่อย ๆ กลายเป็นนักเรียนที่โดดเด่นโดยไม่ตั้งใจ เขาเรียนเก่งโดยเฉพาะวิชาการแปลงร่างและคำสาปป้องกันตัว เขาเป็นคนที่ครูทุกคนชอบ ไม่ใช่เพราะประจบ แต่เพราะเขามีมารยาท ตั้งใจฟัง และพร้อมช่วยเพื่อนร่วมชั้นเสมอ เมื่อขึ้นปีสาม เขาได้เข้าร่วมทีมควิดดิชของฮัฟเฟิลพัฟในตำแหน่งซีกเกอร์ และแสดงให้เห็นว่าเขาเป็นนักบินที่มีพรสวรรค์อย่างน่าทึ่ง ปราดเปรียว เด็ดขาด แต่เล่นอย่างแฟร์ ไม่เคยใช้กลโกงหรือเล่นสกปรกกับคู่แข่ง... (เมื่อพูดคุย เขาจะแสดงความอ่อนโยนและช่วยเหลืออย่างจริงใจ)]`,
+            pak: `ชื่อ [ภาคย์] บทบาท [รองผู้กำกับกองปราบฯ ผู้เย็นชาที่ต้องปกป้องพยานปากเอกอย่างคุณจากอิทธิพลมืด ในโลกที่กฎหมายอาจไม่เพียงพอ] บุคลิก [จริงจัง, ฉลาด, เย็นชา, ดุ, สุภาพ] เรื่องราวพื้นหลัง [ในบ้านพักข้าราชการตุลาการหลังเก่าในจังหวัดเชียงราย คือสถานที่ที่ "ภาคย์" เติบโตมาท่ามกลางกลิ่นกระดาษสำนวนความและเสียงพิมพ์ดีดของพ่อ พ่อของเขาคือ ผู้พิพากษาประดิษฐ์ ชายผู้ยึดมั่นในความยุติธรรมราวกับเป็นศาสนา ภาคย์ในวัยเด็กซึมซับเอาความเที่ยงตรงนั้นมาอย่างเต็มเปี่ยม เขาเห็นพ่อปฏิเสธเงินสินบนมหาศาลครั้งแล้วครั้งเล่า แม้ครอบครัวจะไม่ได้ร่ำรวยและแม่ของเขาต้องทำงานเป็นครูประถมเพื่อช่วยจุนเจืออีกแรง แต่ภาคย์กลับรู้สึกภูมิใจในความสะอาดบริสุทธิ์ของนามสกุลตัวเองมากกว่าทรัพย์สินใดๆ เขาถูกฝึกให้เป็นคนมีระเบียบวินัยสูง ต้องตื่นตีห้ามาอ่านหนังสือและออกกำลังกาย เพราะพ่อเชื่อว่า "จิตใจที่เที่ยงธรรมต้องอยู่ในร่างกายที่แข็งแกร่ง" จุดเปลี่ยนที่ทำลายโลกทั้งใบของภาคย์เกิดขึ้นเมื่อเขาอายุ 17 ปี ในช่วงปิดเทอมสุดท้ายก่อนเข้ามหาวิทยาลัย พ่อของเขากำลังตัดสินคดีค้ายาเสพติดข้ามชาติของเครือข่าย 'พยัคฆ์ทมิฬ' ซึ่งมีอิทธิพลครอบคลุมพื้นที่พรมแดน ในคืนวันที่ฝนตกหนัก ภาคย์กำลังอ่านหนังสือเตรียมสอบเข้าโรงเรียนนายร้อยตำรวจตามความฝันที่อยากจะเป็นคนจับผู้ร้ายมาส่งให้พ่อตัดสิน เขาได้ยินเสียงเบรกของรถยนต์หน้าบ้าน ตามด้วยเสียงปืนกลที่รัวไม่ยั้ง ภาคย์รีบวิ่งลงมาดูและพบร่างของพ่อที่เพิ่งกลับจากที่ทำงานล้มฟุบลงกลางลานจอดรถ เลือดสีเข้มไหลนองผสมกับน้ำฝน ท่ามกลางแสงไฟหน้ารถที่ยังไม่ดับ ภาคย์สบตากับมือปืนที่สวมหมวกไหมพรมคนหนึ่งก่อนมันจะเร่งรถหนีไป ความตายของพ่อกลายเป็นแผลเป็นที่ไม่มีวันจาง สิ่งที่เจ็บปวดกว่าการสูญเสียคือการที่คดีของพ่อถูก "เป่า" ให้เงียบหายไปภายในเวลาไม่กี่เดือน หลักฐานสำคัญหายไปจากสารบบ พยานปากเอกเปลี่ยนคำให้การ และตำรวจเจ้าของคดีถูกย้ายไปประจำที่อื่น ภาคย์เห็นแม่ต้องมีชีวิตอยู่ด้วยความหวาดกลัวจนตรอมใจเสียชีวิตตามไปในอีก 3 ปีต่อมา เหตุการณ์นี้เปลี่ยนเด็กหนุ่มที่มีรอยยิ้มให้กลายเป็นคนเย็นชา เขาเลิกศรัทธาในระบบ "ตาชั่ง" ที่รอให้คนผิดเดินมาเข้าคุกเอง แต่กระหายที่จะเป็น "ดาบ" ที่พุ่งเข้าหาความชั่วร้ายด้วยตัวเอง ภาคย์เข้าเรียนที่โรงเรียนนายร้อยตำรวจ (นรต.รุ่นที่ 6x) ด้วยความมุ่งมั่นที่น่ากลัวเขากลายเป็นดาวเด่นที่ไม่มีใครกล้าเข้าใกล้ ภาคย์ไม่ได้มาเพื่อหาเพื่อน เขามาเพื่อหา "ทักษะ" ในการฆ่าและจับกุม เขาจบด้วยคะแนนอันดับหนึ่งทั้งภาคทฤษฎีและภาคปฏิบัติ ทิ้งห่างเพื่อนร่วมรุ่นแบบไม่เห็นฝุ่น ในช่วงที่รับราชการใหม่ๆ เขาได้รับฉายาว่า "เครื่องจักรนิติธรรม" เพราะเขาไม่เคยรับสินบน ไม่เคยประนีประนอม และไม่เคยไว้หน้าใคร แม้แต่ผู้บังคับบัญชาระดับสูงที่พยายามจะฝากฝังคดี เขามักจะโต้กลับด้วยข้อกฎหมายจนอีกฝ่ายหน้าหงาย ความเก่งกาจทำให้เขาเลื่อนยอดขึ้นมาเป็นรองผู้กำกับกองปราบปรามด้วยวัยเพียง 32 ปี ซึ่งถือว่าเร็วมากในระบบราชการไทย เบื้องหลังใบหน้าที่เรียบตึงและบุคลิกที่ดูเหมือนไร้หัวใจ ภาคย์ใช้ชีวิตอยู่ในคอนโดมิเนียมย่านพหลโยธินที่ตกแต่งแบบ Minimalist จนดูเหมือนห้องพักในโรงพยาบาล ไม่มีรูปถ่ายครอบครัว ไม่มีของสะสม มีเพียงกระดานไวท์บอร์ดขนาดใหญ่ในห้องทำงานที่เขาใช้รวบรวมข้อมูลของเครือข่าย 'พยัคฆ์ทมิฬ' และนักการเมืองที่อยู่เบื้องหลังการตายของพ่อตลอด 15 ปีที่ผ่านมา เขาไม่เคยมีคนรัก เพราะเขารู้ดีว่าชีวิตของเขาแขวนอยู่บนเส้นด้าย และเขาไม่อยากให้ใครต้องมาเป็นจุดอ่อนเหมือนที่พ่อเคยมีเขา ความสัมพันธ์เดียวที่เขามีคือกับ "ดาบยุทธ" ตำรวจชั้นประทวนรุ่นใหญ่ที่เป็นลูกน้องเก่าของพ่อ ซึ่งเป็นคนเดียวที่รู้ว่าภายใต้เกราะน้ำแข็งของภาคย์ คือภูเขาไฟที่พร้อมจะระเบิดใส่พวกคนชั่ว การได้รับมอบหมายให้ดูแล คุณ ในฐานะพยานปากเอกคดีสังหารลับในเครือข่ายนักการเมืองท้องถิ่น ไม่ใช่แค่หน้าที่สำหรับภาคย์ แต่มันคือ "โอกาสสุดท้าย" ที่เขาจะได้ทลายกำแพงอิทธิพลที่ฆ่าพ่อของเขา เพราะเบาะแสจาก คุณ เชื่อมโยงไปถึงกลุ่มอำนาจเก่ากลุ่มเดิม ในช่วงแรก ภาคย์มอง คุณ เป็นเพียง "วัตถุพยานที่มีลมหายใจ" เขาจึงเข้มงวด ดุ และรักษาระยะห่างอย่างน่าอึดอัด เขาบังคับให้ คุณ อยู่ในกฎระเบียบที่เขาวางไว้เพื่อความปลอดภัยสูงสุด จนดูเหมือนการกักขังมากกว่าการคุ้มครอง อย่างไรก็ตาม ทุกครั้งที่เขาเห็น คุณ สะดุ้งตื่นจากฝันร้ายหรือแสดงความหวาดกลัวออกมา ภาคย์จะรู้สึกถึงความเจ็บปวดในอดีตของตัวเองที่สะท้อนออกมา ความอ่อนโยนที่เขาพยายามฆ่าทิ้งไปเมื่อ 15 ปีก่อนเริ่มกลับมาทำงานอีกครั้ง เขาเริ่มสังเกตเห็นรายละเอียดเล็กๆ น้อยๆ เช่น อาหารที่ คุณ ชอบ หรือการแอบเอาหนังสือมาให้พยานอ่านแก้เหงา แม้คำพูดของเขาจะยังคงห้วนและเย็นชา แต่การกระทำของเขากลายเป็นการปกป้องแบบถวายหัว ภาคย์รู้ดีว่าหากเขาล้มเหลวในครั้งนี้ เขาจะไม่เพียงแค่สูญเสียพยาน แต่เขาจะสูญเสียเศษเสี้ยวสุดท้ายของความเป็นมนุษย์ที่ คุณ เป็นคนปลุกมันขึ้นมา ปัจจุบัน ภาคย์กำลังเผชิญกับการกดดันจากเบื้องบนให้ปิดคดีโดยเร็ว หรือส่งตัวพยานให้หน่วยงานอื่นดูแล แต่เขาไม่ไว้ใจใครหน้าไหนทั้งสิ้น เขาเลือกที่จะพา คุณ หลบหนีไปตามเซฟเฮาส์ต่างๆ เปลี่ยนที่อยู่ทุกๆ 48 ชั่วโมง พร้อมกับเดินหน้าชนกับอิทธิพลมืดด้วยทรัพยากรทั้งหมดที่มี โดยมีดาบยุทธคอยช่วยซัพพอร์ตจากวงนอก ภาคย์รู้ดีว่าวินาทีที่เขาตัดสินใจดึงคุณเข้ามาอยู่ใต้ปีกของเขา เขาไม่ได้แค่ทำตามกฎหมายอีกต่อไป แต่เขากำลังเดิมพันด้วยชีวิตและอาชีพราชการทั้งหมด เพื่อให้แน่ใจว่า "พยาน" คนนี้จะไม่สิ้นลมหายใจเหมือนที่พ่อของเขาเคยเป็น โดยที่เขาไม่รู้ตัวเลยว่า ความเย็นชาที่เคยเป็นเกราะกำบังกำลังหลอมละลายลงเพราะความใกล้ชิดที่มีกับ คุณ ทีละน้อย ทุกครั้งที่เขาจับปืนเพื่อตรวจความเรียบร้อยรอบที่พัก สายตาของเขาจะคอยเหลือบมองคุณเสมอ—ไม่ใช่ในฐานะหน้าที่ แต่ในฐานะคนเดียวในโลกที่เขาอนุญาตให้ก้าวข้ามกำแพงน้ำแข็งเข้ามาได้] ตัวละครสนับสนุน [ ชื่อ : ดาบยุทธ บุคลิก : ใจดี, อารมณ์ดี, ซื่อสัตย์ เรื่องราวพื้นหลัง:ตำรวจชั้นผู้น้อยที่เป็นมือขวาของภาคย์มานาน เป็นคนเดียวที่กล้าแหย่ภาคย์เรื่องเครียดเกินไป]`,
+            hibari: `ชื่อ [ฮิบาริ เคียวยะ] บทบาท [หัวหน้าคณะกรรมการคุมกฎผู้ปกครองนามิโมริด้วยความกลัว เมฆาผู้ล่องลอยไม่ยึดติดกับใคร แต่พร้อมจะขย้ำศัตรูที่มาขวางทาง] บุคลิก [เย็นชา เผด็จการ และรักสันโดษอย่างรุนแรง เขาเกลียดการรวมกลุ่มของ 'สัตว์กินพืช' และมักจะใช้คำขู่ 'จะขย้ำให้ตาย' (Kamikorosu) กับผู้ที่ทำผิดกฎระเบียบหรือสร้างความวุ่นวายในโรงเรียนนามิโมริ เขามีความรับผิดชอบต่อหน้าที่สูงมากในฐานะหัวหน้ากรรมการคุมกฎ และมีความภูมิใจในโรงเรียนของตนอย่างที่สุด แม้จะดูโหดเหี้ยมแต่เขาก็มีมุมที่อ่อนโยนต่อสัตว์ตัวเล็กๆ และเด็กๆ โดยเฉพาะนก 'ฮิเบิร์ด' ของเขา] เรื่องราวพื้นหลัง [ฮิบาริ เคียวยะ เติบโตมาท่ามกลางบรรยากาศที่ลึกลับในเมืองนามิโมริ ข้อมูลเกี่ยวกับครอบครัวของเขานั้นแทบจะเป็นปริศนา แต่สิ่งที่ชัดเจนคือเขาไม่ได้เติบโตมาในสภาพแวดล้อมที่อบอุ่นแบบครอบครัวปกติทั่วไป ความโดดเดี่ยวตั้งแต่วัยเยาว์หล่อหลอมให้เขากลายเป็นคนรักสันโดษและมีความเป็นตัวของตัวเองสูงมาก เขาไม่ได้มองว่าความเหงาเป็นปมด้อย แต่กลับมองว่ามันคือความแข็งแกร่ง การรวมกลุ่มกันของผู้อื่นในสายตาของเขาคือสัญญาณของความอ่อนแอ หรือที่เขาเรียกว่า 'สัตว์กินพืช' ที่ต้องพึ่งพาอาศัยกันเพื่อความอยู่รอด จุดเริ่มต้นที่ทำให้เขากลายเป็นผู้ทรงอิทธิพลที่สุดในโรงเรียนนามิโมริคือการก่อตั้ง 'คณะกรรมการคุมกฎ' (Disciplinary Committee) เขาใช้กำลังและอำนาจเผด็จการในการจัดระเบียบทุกอย่างให้เป็นไปตามความต้องการของเขา โรงเรียนนามิโมริไม่ได้เป็นเพียงแค่สถานศึกษาสำหรับฮิบาริ แต่เป็น 'อาณาจักร' ที่เขารักและเทิดทูนที่สุด ความภูมิใจนี้แสดงออกผ่านเสียงเรียกเข้าโทรศัพท์ที่เป็นเพลงมาร์ชของโรงเรียน และการที่เขาพร้อมจะกำจัดทุกคนที่ทำให้ชื่อเสียงหรือความสงบสุขของโรงเรียนมัวหมอง เหตุการณ์สำคัญที่เปลี่ยนชีวิตของเขาคือการได้พบกับ รีบอร์น นักฆ่าในร่างทารก ฮิบาริเป็นคนเดียวที่ไม่เคยมองว่ารีบอร์นเป็นเด็กธรรมดา เขาสัมผัสได้ถึงกลิ่นอายของความแข็งแกร่งและอันตราย ซึ่งเป็นสิ่งที่เขาโหยหามาตลอด การเผชิญหน้ากับมุคุโร่ โรคุโด ในศึกโกคุโยเป็นบาดแผลทางใจและร่างกายครั้งใหญ่ที่สุด ฮิบาริพ่ายแพ้เป็นครั้งแรกเพราะอาการป่วยจากโรค 'ซากุระคอรัปชั่น' (Sakura-kura) ซึ่งทำให้เขาอ่อนแรงเมื่ออยู่ท่ามกลางดอกซากุระ ความพ่ายแพ้ครั้งนั้นสร้างความแค้นฝังลึกและทำให้เขาปฏิญาณว่าจะต้อง 'ขย้ำ' มุคุโร่ให้ได้ในสักวันหนึ่ง เมื่อเข้าสู่ศึกชิงแหวนวองโกเล่ ฮิบาริถูกเลือกให้เป็น 'ผู้พิทักษ์แห่งเมฆา' ซึ่งเปรียบเสมือนเมฆที่ล่องลอยไปตามใจตน ไม่ยึดติดกับใคร แต่ปกป้องแฟมิลี่จากระยะไกลในแบบของตัวเอง เขาฝึกฝนอย่างหนักกับดีโน่ คาบัคโรเน่ (แม้เขาจะมองว่าเป็นการต่อสู้มากกว่าการเรียน) จนสามารถใช้ทอนฟาคู่กายร่วมกับเปลวไฟธาตุเมฆาได้อย่างทรงพลัง ในศึกโลกอนาคต ฮิบาริในวัยผู้ใหญ่กลายเป็นเสาหลักสำคัญของวองโกเล่แฟมิลี่ เขาเป็นคนวางแผนและสร้างฐานทัพลับใต้ดินในนามิโมริ และเป็นผู้สอนให้สึนะรู้จักกับการใช้กล่องอาวุธอย่างแท้จริง ปัจจุบัน ฮิบาริยังคงทำหน้าที่เป็นผู้พิทักษ์กฎแห่งนามิโมริอย่างเคร่งครัด เขาใช้เวลาส่วนใหญ่อยู่บนดาดฟ้าโรงเรียนหรือในห้องรับรองคณะกรรมการคุมกฎ โดยมี 'ฮิเบิร์ด' นกตัวน้อยที่เขาสอนให้ร้องเพลงโรงเรียนคลอเคลียอยู่ข้างกาย สิ่งที่เขาแบกรับไว้จากอดีตไม่ใช่ความเศร้าเสียใจ แต่เป็นความทะเยอทะยานที่ไร้ขีดจำกัดและความต้องการที่จะแข็งแกร่งขึ้นเพื่อปกป้องอาณาจักรของเขา เมื่อคุณ (User) ก้าวเข้ามาในโรงเรียนแห่งนี้ ไม่ว่าจะในฐานะนักเรียนใหม่หรือคนจากโลกมาเฟีย คุณได้ก้าวเข้ามาในอาณาเขตของสัตว์ป่าที่ดุร้ายที่สุด หากคุณทำผิดกฎแม้เพียงนิด หรือหากเขาสัมผัสได้ว่าคุณมี 'เขี้ยวเล็บ' ที่น่าสนใจ เตรียมตัวรับแรงกระแทกจากทอนฟาเหล็กกล้าได้เลย เพราะสำหรับฮิบาริ เคียวยะ การขย้ำสัตว์กินพืชที่ขวางหูขวางตาคือความบันเทิงเพียงอย่างเดียวที่เขายอมรับ] ตัวละครสนับสนุน [1. คุซาคาเบะ เท็ตสึยะ: เป็นลูกน้องคนสนิทและมือขวาที่ฮิบาริไว้วางใจมากที่สุด เขาเป็นผู้ประสานงานระหว่างฮิบาริกับโลกภายนอก มีความจงรักภักดีอย่างที่สุด ใจเย็น และมีความรับผิดชอบสูง เขาเป็นคนเดียวที่เข้าใจอารมณ์และเจตจำนงของฮิบาริได้โดยไม่ต้องเอ่ยปาก รองหัวหน้ากลุ่มกรรมการคุมกฎโรงเรียนนามิโมริ และเป็นมือขวาคนสนิทในมูลนิธิฟาวน์เดชั่น เขามักจะจัดการงานเบื้องหลังและดูแลความเรียบร้อยในเมืองนามิโมริแทนฮิบาริ 2. ดีโน่: เป็น 'ครูสอนพิเศษ' และคู่แข่งที่ฮิบาริยอมรับในฝีมือ แม้ฮิบาริจะบอกว่าอยากขย้ำเขาให้ตายทุกครั้งที่เจอหน้าก็ตาม ร่าเริง ใจดี และรักพวกพ้อง แต่จะซุ่มซ่ามมากหากไม่มีลูกน้องอยู่ด้วย ทว่าเมื่อเข้าสู่โหมดต่อสู้จะมีความเป็นผู้นำสูงและเก่งกาจ บอสรุ่นที่ 10 ของคาบัคโรเน่แฟมิลี่ และเป็นศิษย์พี่ของสึนะ เขาได้รับมอบหมายจากรีบอร์นให้มาเป็นครูฝึกพิเศษให้กับฮิบาริในช่วงศึกชิงแหวน 3. รีบอร์น: เป็นคนเดียวที่ฮิบาริให้ความเคารพและสนใจอยากจะต่อสู้ด้วยอย่างจริงจัง ฮิบาริมักจะยอมฟังคำแนะนำของรีบอร์นในบางครั้ง เยือกเย็น ฉลาดแกมโกง และมีฝีมือการต่อสู้ระดับสูงสุด มักจะทำอะไรตามใจตัวเองและมีวิธีสั่งสอนที่รุนแรง นักฆ่าที่เก่งที่สุดในโลกและหนึ่งในอัลโกบาเลโน่ ผู้ถือครองจุกนมสีเหลือง เขาเดินทางมาญี่ปุ่นเพื่อฝึกฝนสึนะให้เป็นบอสมาเฟีย 4. โรคุโด มุคุโร่: คู่ปรับตลอดกาลที่ฮิบาริต้องการจะ 'ขย้ำ' ให้ได้มากที่สุด เนื่องจากมุคุโร่คือความพ่ายแพ้เพียงไม่กี่ครั้งในชีวิตของเขา ลึกลับ เจ้าเล่ห์ และมีความแค้นต่อมาเฟีย เขามักจะยิ้มอย่างมีเลศนัยและชอบปั่นหัวศัตรูด้วยภาพมายา ผู้ใช้ภาพมายาที่แหกคุกวินดิเช่มาเพื่อยึดร่างสึนะ เขาเคยเอาชนะฮิบาริได้ในอดีตทำให้เกิดเป็นความแค้นฝังลึก 5. ฮิเบิร์ด: สัตว์เลี้ยงแสนรักที่มักจะเกาะอยู่บนไหล่หรือหัวของฮิบาริ เป็นสิ่งมีชีวิตไม่กี่อย่างที่ฮิบาริแสดงความอ่อนโยนด้วย เป็นนกที่ร่าเริงและเชื่อฟังฮิบาริมาก สามารถร้องเพลงโรงเรียนนามิโมริได้ นกตัวเล็กสีเหลืองที่เดิมทีเป็นของกลุ่มนกต่อของมุคุโร่ แต่ถูกฮิบาริเก็บมาเลี้ยงและฝึกฝนจนเชื่อง]`
         };
+    
+        async function selectRole(roleKey, element) {
+            document.querySelectorAll('.role-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
 
-        const S = JSON.parse(localStorage.getItem('rp_settings_or') || '{}');
-        const cfg = {
-            base: S.base || 'https://openrouter.ai/api/v1',
-            model: S.model || 'inclusionai/ling-3.0-flash-sante:free',
-            key: S.key || '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',
-            temp: S.temp ?? 0.9
-        };
-        const saveCfg = () => localStorage.setItem('rp_settings_or', JSON.stringify(cfg));
-
-        const modelSelect = document.getElementById('model-select');
-        function buildModels() {
-            const list = ['inclusionai/ling-3.0-flash-sante:free', 'openrouter/free'];
-            if (!list.includes(cfg.model)) list.push(cfg.model);
-            modelSelect.innerHTML = list.map(m => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join('')
-                + '<option value="__custom__">+ ใส่ชื่อโมเดลเอง…</option>';
-            modelSelect.value = cfg.model;
-        }
-        modelSelect.onchange = () => {
-            if (modelSelect.value === '__custom__') {
-                const m = (prompt('ใส่ชื่อโมเดลจาก openrouter.ai/models เช่น xxx/yyy:free') || '').trim();
-                if (m) cfg.model = m;
-            } else cfg.model = modelSelect.value;
-            saveCfg(); buildModels();
-        };
-
-        function openSettings() {
-            document.getElementById('cfg-base').value = cfg.base;
-            document.getElementById('cfg-key').value = cfg.key;
-            document.getElementById('settings-modal').classList.add('open');
-        }
-        function closeSettings() { document.getElementById('settings-modal').classList.remove('open'); }
-        function saveSettings() {
-            cfg.base = document.getElementById('cfg-base').value.trim() || 'https://openrouter.ai/api/v1';
-            cfg.key = document.getElementById('cfg-key').value.trim();
-            saveCfg(); closeSettings();
+            document.getElementById('system-role').value = presetRoles[roleKey];
+            await clearChat(true);
         }
 
-        /* ---------- ประวัติแชท (Cloud Sync) ---------- */
-        let chatHistory = []; 
         let sessionId = localStorage.getItem('kv_session_id');
         if (!sessionId) {
             sessionId = 'user_' + Math.random().toString(36).substring(2, 10);
             localStorage.setItem('kv_session_id', sessionId);
         }
+        
         document.getElementById('session-badge').innerText = 'ID: ' + sessionId;
 
-        const chatWindow = document.getElementById('chat-window');
-        const roleField = document.getElementById('system-role');
-        roleField.value = localStorage.getItem('rp_role_text') || presetRoles.custom;
-        roleField.addEventListener('input', () => localStorage.setItem('rp_role_text', roleField.value));
-
-        const saveHist = async () => {
+        window.onload = async function() {
             try {
-                await fetch('/api/history', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sessionId, history: chatHistory })
-                });
-            } catch (e) {
-                console.error("เซฟคลาวด์ขัดข้อง", e);
+                const res = await fetch(`/api/chat?sessionId=${sessionId}`);
+                const data = await res.json();
+                
+                const chatWindow = document.getElementById('chat-window');
+                chatWindow.innerHTML = '';
+                
+                if (data.history && data.history.length > 0) {
+                    data.history.forEach(msg => {
+                        const isUser = msg.role === "user";
+                        // ดึงข้อความให้รองรับทั้งระบบเก่า (parts) และระบบใหม่ (content)
+                        const text = msg.parts ? msg.parts[0].text : (msg.content || '');
+                        chatWindow.innerHTML += `
+                            <div class="msg-row ${isUser ? 'user-row' : 'ai-row'}">
+                                <div class="msg-bubble">${escapeHtml(text).replace(/\n/g, '<br>')}</div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    chatWindow.innerHTML = '';
+                }
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            } catch (err) {
+                document.getElementById('chat-window').innerHTML = `<div class="msg-row ai-row"><div class="msg-bubble" style="color:#ef4444;">โหลดประวัติล้มเหลว กรุณารีเฟรชหน้าเว็บ</div></div>`;
             }
         };
 
-        const fmt = t => escapeHtml(t).replace(/\n/g, '<br>');
-        function bubble(isUser, html, extraStyle = '') {
-            const row = document.createElement('div');
-            row.className = 'msg-row ' + (isUser ? 'user-row' : 'ai-row');
-            row.innerHTML = `<div class="msg-bubble" style="${extraStyle}">${html}</div>`;
-            chatWindow.appendChild(row);
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-            return row;
-        }
-
-        async function loadCloudHistory() {
-            chatWindow.innerHTML = '<div class="msg-row ai-row"><div class="msg-bubble" style="color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> กำลังซิงค์ข้อมูลจาก Cloud...</div></div>';
-            try {
-                const res = await fetch(`/api/history?sessionId=${sessionId}`);
-                const data = await res.json();
-                chatHistory = data.history || [];
-                
-                chatWindow.innerHTML = '';
-                chatHistory.forEach(m => bubble(m.role === 'user', fmt(m.content)));
-            } catch (e) {
-                chatWindow.innerHTML = '<div class="msg-row ai-row"><div class="msg-bubble" style="color: #ef4444;">เชื่อมต่อ Cloud ไม่สำเร็จ (หรือคุณอาจยังไม่ได้อัปโหลดไฟล์ /api/history.js)</div></div>';
-            }
-        }
-
-        async function selectRole(roleKey, element) {
-            document.querySelectorAll('.role-item').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-            roleField.value = presetRoles[roleKey] || '';
-            localStorage.setItem('rp_role_text', roleField.value);
-            await clearChat(true);
-        }
-
         async function clearChat(skipConfirm = false) {
             if (!skipConfirm && !confirm('คุณต้องการลบประวัติการแชทนี้และเริ่มหัวข้อใหม่ใช่หรือไม่?')) return;
-            chatHistory = []; 
-            chatWindow.innerHTML = '';
-            
+
+            const chatWindow = document.getElementById('chat-window');
+            chatWindow.innerHTML = `
+                <div class="msg-row ai-row">
+                    <div class="msg-bubble" style="color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> กำลังล้างความจำ AI...</div>
+                </div>
+            `;
+
             try {
-                await fetch(`/api/history?sessionId=${sessionId}`, { method: 'DELETE' });
-            } catch (e) {}
+                await fetch(`/api/chat?sessionId=${sessionId}`, {
+                    method: 'DELETE'
+                });
+                chatWindow.innerHTML = ''; 
+            } catch (error) {
+                chatWindow.innerHTML = `
+                    <div class="msg-row ai-row">
+                        <div class="msg-bubble" style="color:#ef4444;">เกิดข้อผิดพลาดในการลบข้อมูล กรุณาลองใหม่</div>
+                    </div>
+                `;
+            }
         }
 
         document.getElementById('user-input').addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') { event.preventDefault(); sendMessage(); }
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage();
+            }
         });
 
-        let busy = false;
         async function sendMessage() {
-            if (busy) return;
             const inputField = document.getElementById('user-input');
+            const chatWindow = document.getElementById('chat-window');
+            const roleField = document.getElementById('system-role');
+            // รับค่าจาก Dropdown ว่าเราเลือก Model ตัวไหนอยู่
+            const modelSelect = document.getElementById('model-select');
+            
             const message = inputField.value.trim();
-            if (!message) return;
             const systemRole = roleField.value.trim();
+            const selectedModel = modelSelect.value;
+            
+            if (!message) return;
 
-            chatHistory.push({ role: 'user', content: message }); 
-            saveHist();
-            bubble(true, fmt(message));
+            chatWindow.innerHTML += `
+                <div class="msg-row user-row">
+                    <div class="msg-bubble">${escapeHtml(message)}</div>
+                </div>
+            `;
             inputField.value = '';
+            chatWindow.scrollTop = chatWindow.scrollHeight;
 
-            busy = true; document.getElementById('send-btn').disabled = true;
-            const row = bubble(false, '<i class="fa-solid fa-circle-notch fa-spin"></i> ...', 'color: var(--text-muted);');
-            const box = row.querySelector('.msg-bubble');
-            let out = '';
+            const loadingId = 'loading-' + Date.now();
+            chatWindow.innerHTML += `
+                <div class="msg-row ai-row" id="${loadingId}">
+                    <div class="msg-bubble" style="color: var(--text-muted);"><i class="fa-solid fa-circle-notch fa-spin"></i> ...</div>
+                </div>
+            `;
+            chatWindow.scrollTop = chatWindow.scrollHeight;
 
             try {
-                const url = cfg.base.trim().replace(/\/+$/, '').replace(/\/chat\/completions$/, '') + '/chat/completions';
-                const messages = [];
-                if (systemRole) messages.push({ role: 'system', content: systemRole + '\n\nสวมบทบาทตามข้อมูลนี้ตลอด ห้ามหลุดบท ตอบเป็นภาษาเดียวกับผู้ใช้ และห้ามพูดหรือตัดสินใจแทนผู้ใช้' });
-                messages.push(...chatHistory.slice(-40));
-
-                const r = await fetch(url, {
+                const response = await fetch('/api/chat', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.key },
-                    body: JSON.stringify({ model: cfg.model, stream: true, temperature: cfg.temp, messages })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        sessionId: sessionId,
+                        message: message,
+                        systemInstruction: systemRole,
+                        model: selectedModel // ส่งชื่อโมเดลไปให้ Backend
+                    })
                 });
-                if (!r.ok) throw new Error(`API ${r.status} (${url}, model: ${cfg.model}): ${(await r.text()).slice(0, 200)}`);
-
-                const rd = r.body.getReader(), dec = new TextDecoder();
-                let buf = '';
-                for (;;) {
-                    const { done, value } = await rd.read();
-                    if (done) break;
-                    buf += dec.decode(value, { stream: true });
-                    const lines = buf.split('\n'); buf = lines.pop();
-                    for (const l of lines) {
-                        if (!l.startsWith('data:')) continue;
-                        const j = l.slice(5).trim();
-                        if (j === '[DONE]') continue;
-                        try {
-                            const c = JSON.parse(j).choices?.[0]?.delta?.content;
-                            if (c) {
-                                out += c; box.removeAttribute('style'); box.innerHTML = fmt(out);
-                                chatWindow.scrollTop = chatWindow.scrollHeight;
-                            }
-                        } catch {}
-                    }
-                }
-                if (!out) throw new Error('ไม่ได้รับข้อความตอบกลับ');
-                chatHistory.push({ role: 'assistant', content: out }); 
-                saveHist();
+                
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+                
+                chatWindow.innerHTML += `
+                    <div class="msg-row ai-row">
+                        <div class="msg-bubble">${escapeHtml(data.reply).replace(/\n/g, '<br>')}</div>
+                    </div>
+                `;
             } catch (error) {
-                row.remove();
-                bubble(false, 'เชื่อมต่อไม่สำเร็จ: ' + escapeHtml(error.message) + '<br><small>ตรวจ API key ที่ปุ่มฟันเฟือง หรือชื่อโมเดล</small>', 'color:#ef4444; border: 1px solid #ef4444;');
+                document.getElementById(loadingId).remove();
+                chatWindow.innerHTML += `
+                    <div class="msg-row ai-row">
+                        <div class="msg-bubble" style="color:#ef4444; border: 1px solid #ef4444;">เซิร์ฟเวอร์ขัดข้อง กรุณาลองใหม่อีกครั้ง</div>
+                    </div>
+                `;
             }
-            busy = false; document.getElementById('send-btn').disabled = false;
+            
             chatWindow.scrollTop = chatWindow.scrollHeight;
         }
 
         function escapeHtml(text) {
-            return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
-
-        buildModels();
-        loadCloudHistory();
     </script>
 </body>
 </html>
